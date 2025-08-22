@@ -1,0 +1,209 @@
+/* src/components/ContactCTA/ContactCTA.css */
+
+.contact-cta {
+    padding: 6rem 0;
+    /* Consistent padding with other sections */
+    background: linear-gradient(180deg, #0f1419 0%, #1a2332 100%);
+    /* Inverse gradient for variation */
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+    /* Center content horizontally */
+}
+
+/* Optional: Add a subtle background pattern/glow similar to tech-stack if desired */
+.contact-cta::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:
+        radial-gradient(circle at 80% 20%, rgba(212, 175, 55, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 20% 80%, rgba(212, 175, 55, 0.04) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+.cta-container {
+    max-width: 900px;
+    /* Slightly narrower max-width for CTA content */
+    margin: 0 auto;
+    padding: 0 2rem;
+    position: relative;
+    z-index: 1;
+    /* Ensure content is above pseudo-element */
+}
+
+.cta-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* Center items vertically within the content box */
+}
+
+.cta-title {
+    font-size: 2.8rem;
+    color: #e8e8e8;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    line-height: 1.2;
+    max-width: 700px;
+    /* Limit width for readability */
+}
+
+.cta-description {
+    font-size: 1.2rem;
+    color: #a0a0a0;
+    margin-bottom: 2.5rem;
+    line-height: 1.7;
+    max-width: 650px;
+    /* Limit width for readability */
+}
+
+.cta-button {
+    display: inline-flex;
+    /* Allows text and arrow to sit side-by-side */
+    align-items: center;
+    /* Vertically align text and arrow */
+    background: linear-gradient(90deg, #d4af37 0%, #c49a2a 100%);
+    /* Golden gradient */
+    color: #1a2332;
+    /* Dark text on golden background */
+    padding: 1rem 2.5rem;
+    border-radius: 50px;
+    /* Pill shape */
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-decoration: none;
+    /* Remove underline from link */
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+    border: 2px solid transparent;
+    /* For hover border effect */
+    box-shadow: 0 5px 15px rgba(212, 175, 55, 0.2);
+    /* Subtle shadow */
+}
+
+.cta-button:hover {
+    transform: translateY(-3px);
+    /* Lift effect on hover */
+    box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
+    /* Enhanced shadow */
+    background: linear-gradient(90deg, #e0bf42 0%, #d4ac37 100%);
+    /* Slightly brighter on hover */
+}
+
+.cta-arrow {
+    margin-left: 0.8rem;
+    /* Space between text and arrow */
+    width: 20px;
+    height: 20px;
+    transition: transform 0.3s ease;
+}
+
+.cta-button:hover .cta-arrow {
+    transform: translateX(5px);
+    /* Move arrow to the right on hover */
+}
+
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 992px) {
+    .contact-cta {
+        padding: 5rem 0;
+    }
+
+    .cta-title {
+        font-size: 2.3rem;
+        margin-bottom: 1.2rem;
+    }
+
+    .cta-description {
+        font-size: 1.1rem;
+        margin-bottom: 2rem;
+        padding: 0 1rem;
+        /* Add padding for smaller screens */
+    }
+
+    .cta-button {
+        padding: 0.9rem 2.2rem;
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .contact-cta {
+        padding: 4rem 0;
+    }
+
+    .cta-container {
+        padding: 0 1.5rem;
+    }
+
+    .cta-title {
+        font-size: 1.9rem;
+        margin-bottom: 1rem;
+    }
+
+    .cta-description {
+        font-size: 1rem;
+        margin-bottom: 1.8rem;
+    }
+
+    .cta-button {
+        padding: 0.8rem 2rem;
+        font-size: 0.95rem;
+    }
+
+    .cta-arrow {
+        width: 18px;
+        height: 18px;
+        margin-left: 0.6rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .contact-cta {
+        padding: 3rem 0;
+    }
+
+    .cta-title {
+        font-size: 1.6rem;
+        margin-bottom: 0.8rem;
+    }
+
+    .cta-description {
+        font-size: 0.9rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .cta-button {
+        padding: 0.7rem 1.8rem;
+        font-size: 0.9rem;
+    }
+
+    .cta-arrow {
+        width: 16px;
+        height: 16px;
+        margin-left: 0.5rem;
+    }
+}
+
+@media (max-width: 400px) {
+    .cta-container {
+        padding: 0 1rem;
+    }
+
+    .cta-title {
+        font-size: 1.4rem;
+    }
+
+    .cta-description {
+        font-size: 0.85rem;
+    }
+
+    .cta-button {
+        padding: 0.6rem 1.5rem;
+        font-size: 0.85rem;
+    }
+}

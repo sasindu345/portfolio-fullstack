@@ -1,0 +1,440 @@
+.tech-stack {
+    padding: 6rem 0;
+    background: linear-gradient(180deg, #1a2332 0%, #0f1419 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.tech-stack::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:
+        radial-gradient(circle at 30% 20%, rgba(212, 175, 55, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 70% 80%, rgba(212, 175, 55, 0.06) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+.tech-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    position: relative;
+    z-index: 1;
+}
+
+.tech-header {
+    text-align: center;
+    margin-bottom: 4rem;
+}
+
+.section-label {
+    display: inline-block;
+    background: rgba(212, 175, 55, 0.1);
+    color: #d4af37;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    border: 1px solid rgba(212, 175, 55, 0.3);
+}
+
+.tech-title {
+    font-size: 2.5rem;
+    color: #e8e8e8;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.tech-subtitle {
+    font-size: 1.1rem;
+    color: #a0a0a0;
+    max-width: 700px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+.tech-grid {
+    display: grid;
+    /* Default for smaller screens, will be overridden for desktop */
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+    justify-items: center;
+    align-items: stretch;
+}
+
+/* Desktop version: 4 columns for a 2x4 layout when there are 8 items */
+@media (min-width: 993px) {
+
+    /* Apply this for desktop screens and larger */
+    .tech-grid {
+        grid-template-columns: repeat(4, 1fr);
+        /* Exactly 4 columns */
+        /* If you had more than 8 items, you might want grid-auto-rows: minmax(auto, auto); */
+        /* The number of rows will implicitly be 2 for 8 items with 4 columns */
+    }
+}
+
+
+.tech-card {
+    background: rgba(26, 35, 50, 0.6);
+    border: 1px solid rgba(212, 175, 55, 0.15);
+    border-radius: 12px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    animation: fadeIn 0.5s ease-out forwards;
+    animation-delay: var(--delay);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.tech-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+    background: rgba(26, 35, 50, 0.8);
+}
+
+.tech-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 150px;
+    height: 150px;
+    background: radial-gradient(circle, rgba(212, 175, 55, 0.1) 0%, transparent 70%);
+    transform: translate(-50%, -50%) scale(0);
+    transition: transform 0.4s ease-out;
+    border-radius: 50%;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.tech-card:hover .tech-glow {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+}
+
+.tech-icon {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+    line-height: 1;
+}
+
+.tech-info {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.tech-name {
+    font-size: 1.25rem;
+    color: #e8e8e8;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.tech-category {
+    font-size: 0.9rem;
+    color: #b0b0b0;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.proficiency-bar {
+    width: 80%;
+    height: 8px;
+    background-color: rgba(212, 175, 55, 0.1);
+    border-radius: 5px;
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+}
+
+.proficiency-fill {
+    height: 100%;
+    width: var(--proficiency);
+    background-color: #d4af37;
+    border-radius: 5px;
+    transition: width 0.8s ease-out;
+}
+
+.proficiency-text {
+    font-size: 0.9rem;
+    color: #d4af37;
+    font-weight: 500;
+}
+
+.tech-footer {
+    text-align: center;
+    margin-top: 5rem;
+    padding-top: 3rem;
+    border-top: 1px solid rgba(212, 175, 55, 0.1);
+}
+
+.tech-note {
+    font-size: 1rem;
+    color: #a0a0a0;
+    margin-bottom: 2.5rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.6;
+}
+
+.tech-highlights {
+    display: flex;
+    justify-content: center;
+    gap: 3rem;
+    flex-wrap: wrap;
+}
+
+.highlight-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.highlight-number {
+    font-size: 2.8rem;
+    color: #d4af37;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 0.5rem;
+}
+
+.highlight-label {
+    font-size: 0.95rem;
+    color: #b0b0b0;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+/* --- Responsive Adjustments --- */
+/* For smaller desktops and large tablets, keep it flexible */
+@media (max-width: 1200px) and (min-width: 993px) {
+    .tech-grid {
+        grid-template-columns: repeat(4, 1fr);
+        /* Ensure 4 columns even if viewport slightly shrinks before 992px */
+        gap: 1.8rem;
+    }
+}
+
+
+@media (max-width: 992px) {
+    .tech-title {
+        font-size: 2.2rem;
+    }
+
+    .tech-subtitle {
+        font-size: 1rem;
+    }
+
+    .tech-grid {
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        /* Fallback to auto-fit for smaller screens */
+        gap: 1.5rem;
+    }
+
+    .tech-card {
+        padding: 1.2rem;
+    }
+
+    .tech-icon {
+        font-size: 3rem;
+    }
+
+    .tech-name {
+        font-size: 1.1rem;
+    }
+
+    .tech-category {
+        font-size: 0.85rem;
+    }
+
+    .highlight-number {
+        font-size: 2.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .tech-stack {
+        padding: 4rem 0;
+    }
+
+    .tech-container {
+        padding: 0 1.5rem;
+    }
+
+    .tech-header {
+        margin-bottom: 3rem;
+    }
+
+    .tech-title {
+        font-size: 1.8rem;
+    }
+
+    .tech-subtitle {
+        font-size: 0.95rem;
+        padding: 0 1rem;
+    }
+
+    .tech-grid {
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 1.2rem;
+    }
+
+    .tech-card {
+        padding: 1rem;
+    }
+
+    .tech-icon {
+        font-size: 2.5rem;
+    }
+
+    .tech-name {
+        font-size: 1rem;
+    }
+
+    .tech-category {
+        font-size: 0.8rem;
+    }
+
+    .proficiency-bar {
+        width: 90%;
+    }
+
+    .tech-footer {
+        margin-top: 4rem;
+        padding-top: 2.5rem;
+    }
+
+    .tech-note {
+        font-size: 0.9rem;
+        margin-bottom: 2rem;
+    }
+
+    .tech-highlights {
+        gap: 2rem;
+    }
+
+    .highlight-number {
+        font-size: 2rem;
+    }
+
+    .highlight-label {
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .tech-stack {
+        padding: 3rem 0;
+    }
+
+    .tech-header {
+        margin-bottom: 2.5rem;
+    }
+
+    .tech-title {
+        font-size: 1.6rem;
+    }
+
+    .tech-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+
+    .tech-card {
+        padding: 0.8rem;
+    }
+
+    .tech-icon {
+        font-size: 2rem;
+    }
+
+    .tech-name {
+        font-size: 0.9rem;
+    }
+
+    .tech-category {
+        font-size: 0.75rem;
+    }
+
+    .proficiency-bar {
+        width: 95%;
+    }
+
+    .proficiency-text {
+        font-size: 0.8rem;
+    }
+
+    .tech-footer {
+        margin-top: 3rem;
+        padding-top: 2rem;
+    }
+
+    .tech-highlights {
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .highlight-number {
+        font-size: 1.8rem;
+    }
+
+    .highlight-label {
+        font-size: 0.85rem;
+    }
+}
+
+@media (max-width: 400px) {
+    .tech-container {
+        padding: 0 1rem;
+    }
+
+    .tech-grid {
+        grid-template-columns: 1fr;
+        gap: 0.8rem;
+    }
+
+    .tech-card {
+        max-width: 250px;
+        margin: 0 auto;
+    }
+
+    .tech-icon {
+        font-size: 1.8rem;
+    }
+
+    .tech-name {
+        font-size: 0.85rem;
+    }
+
+    .tech-category {
+        font-size: 0.7rem;
+    }
+}
