@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import './Contact.css';
+import { contactService } from '../../services/contactService';
 
 const Contact = () => {
     // State to store form data
@@ -15,6 +16,13 @@ const Contact = () => {
     // State to show loading and success/error messages
     const [isLoading, setIsLoading] = useState(false);
     const [showMessage, setShowMessage] = useState('');
+
+    // Test connection when component loads
+    React.useEffect(() => {
+        contactService.testConnection()
+            .then(data => console.log('Backend test successful:', data))
+            .catch(error => console.error('Backend test failed:', error));
+    }, []);
 
     // Handle input changes
     const handleChange = (e) => {

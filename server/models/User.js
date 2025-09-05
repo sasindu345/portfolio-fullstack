@@ -1,12 +1,7 @@
-// User.js - This defines how user data is stored
-// Every user will have: username, email, password, role, etc.
-
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 
-// Define the User Schema (data structure)
 const userSchema = new mongoose.Schema({
-    // Username field
     username: {
         type: String,
         required: [true, 'Username is required'],
@@ -15,8 +10,6 @@ const userSchema = new mongoose.Schema({
         minlength: [3, 'Username must be at least 3 characters'],
         maxlength: [30, 'Username cannot exceed 30 characters']
     },
-
-    // Email field
     email: {
         type: String,
         required: [true, 'Email is required'],
@@ -24,27 +17,20 @@ const userSchema = new mongoose.Schema({
         trim: true,
         lowercase: true,
         match: [
-            /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
-            'Please enter a valid email address'
+            /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+            'Please provide a valid email address'
         ]
     },
-
-    // Password field
     password: {
         type: String,
         required: [true, 'Password is required'],
-        minlength: [6, 'Password must be at least 6 characters'],
-        select: false // This prevents password from being returned in queries by default
+        minlength: [6, 'Password must be at least 6 characters']
     },
-
-    // Role field (admin, user, etc.)
     role: {
         type: String,
         enum: ['user', 'admin'],
         default: 'user'
     },
-
-    // Profile information
     profile: {
         firstName: {
             type: String,
@@ -61,35 +47,55 @@ const userSchema = new mongoose.Schema({
             maxlength: [500, 'Bio cannot exceed 500 characters']
         }
     },
+    // Add this field to your existing User schema
 
-    // Account status
+    profileImage: {
+        thumbnail: {
+            filename: String,
+            path: String,
+            url: String
+        },
+        small: {
+            filename: String,
+            path: String,
+            url: String
+        },
+        medium: {
+            filename: String,
+            path: String,
+            url: String
+        },
+        large: {
+            filename: String,
+            path: String,
+            url: String
+        },
+        original: {
+            filename: String,
+            path: String,
+            url: String
+        }
+    },
+
     isActive: {
         type: Boolean,
         default: true
     },
-
-    // Timestamps
     lastLogin: {
-        type: Date,
-        default: null
+        type: Date
     }
 }, {
-    // This adds createdAt and updatedAt fields automatically
-    timestamps: true,
+    timestamps: true
+}
+);
 
-    // This removes __v field from responses
-    versionKey: false
-});
-
-// Pre-save middleware to hash password
+// Hash password before saving
 userSchema.pre('save', async function (next) {
-    // Only hash password if it's been modified
-    if (!this.isModified('password')) {
-        return next();
-    }
+    // Only hash the password if it has been modified (or is new)
+    if (!this.isModified('password')) return next();
 
     try {
-        // Hash password with salt rounds of 12
+        // Hash password with cost of 12
         const salt = await bcrypt.genSalt(12);
         this.password = await bcrypt.hash(this.password, salt);
         next();
@@ -98,21 +104,23 @@ userSchema.pre('save', async function (next) {
     }
 });
 
-// Method to compare entered password with hashed password
-userSchema.methods.comparePassword = async function (enteredPassword) {
-    return await bcrypt.compare(enteredPassword, this.password);
+// Method to compare password for login - THIS IS THE IMPORTANT PART!
+userSchema.methods.comparePassword = async function (candidatePassword) {
+    try {
+        // Compare the provided password with the hashed password
+        return await bcrypt.compare(candidatePassword, this.password);
+    } catch (error) {
+        throw new Error('Password comparison failed');
+    }
 };
 
-// Method to get user without sensitive information
+// Remove password from JSON output
 userSchema.methods.toJSON = function () {
-    const user = this.toObject();
-    delete user.password;
-    return user;
+    const userObject = this.toObject();
+    delete userObject.password;
+    return userObject;
 };
 
-// Create indexes for better query performance
-userSchema.index({ email: 1 });
-userSchema.index({ username: 1 });
-userSchema.index({ createdAt: -1 });
+const User = mongoose.model('User', userSchema);
 
-export default mongoose.model('User', userSchema);
+export default User;

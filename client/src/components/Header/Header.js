@@ -23,7 +23,7 @@ const Header = () => {
             <div className="header-container">
                 {/* Logo */}
                 <div className="logo">
-                    <Link to="/" onClick={closeMenu}>
+                    <Link to="/login" onClick={closeMenu}>
                         <h2>Portfolio</h2>
                     </Link>
                 </div>

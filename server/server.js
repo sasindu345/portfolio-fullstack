@@ -7,6 +7,12 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import connectDB from './config/database.js';
 import testRoutes from './routes/test.js';
+import authRoutes from './routes/auth.js';
+import projectRoutes from './routes/projects.js';
+import contactRoutes from './routes/contacts.js';
+import uploadRoutes from './routes/upload.js';
+
+
 
 // Load environment variables
 dotenv.config();
@@ -14,6 +20,7 @@ dotenv.config();
 // Create an Express application
 // Think of this as creating your web server
 const app = express();
+
 connectDB();
 
 // Define the port your server will run on
@@ -25,10 +32,12 @@ const PORT = process.env.PORT || 5001;
 // ===============================
 
 // CORS: Allows your React app (probably running on port 3000) to talk to this server
-app.use(cors({
-    origin: 'http://localhost:3000', // Your React app's address
-    credentials: true // Allows cookies/auth headers
-}));
+app.use(
+    cors({
+        origin: 'http://localhost:3000', // Your React app's address
+        credentials: true, // Allows cookies/auth headers
+    })
+);
 
 // Parse JSON data from requests
 // This means when someone sends data to your API, Express can understand it
@@ -37,17 +46,18 @@ app.use(express.json());
 // Parse URL-encoded data (from forms)
 app.use(express.urlencoded({ extended: true }));
 
+
+
 // ===============================
 // BASIC ROUTES (These are your API endpoints)
 // ===============================
-
 
 // Test route - This proves your server is working
 app.get('/', (req, res) => {
     res.json({
         message: 'Portfolio Backend is running!',
         status: 'success',
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
     });
 });
 
@@ -56,10 +66,22 @@ app.get('/api/health', (req, res) => {
     res.json({
         status: 'healthy',
         uptime: process.uptime(),
-        memory: process.memoryUsage()
+        memory: process.memoryUsage(),
     });
 });
+
 app.use('/api/test', testRoutes);
+
+// Authentication routes
+app.use('/api/auth', authRoutes);
+
+app.use('/api/projects', projectRoutes);
+app.use('/api/contact', contactRoutes);
+
+
+
+// Add this line with your other routes
+app.use('/api/uploads', uploadRoutes);
 
 // ===============================
 // START THE SERVER

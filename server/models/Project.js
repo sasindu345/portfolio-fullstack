@@ -177,7 +177,8 @@ projectSchema.pre('save', function (next) {
 });
 
 // Indexes for better query performance
-projectSchema.index({ slug: 1 });
+
+//projectSchema.index({ slug: 1 });
 projectSchema.index({ category: 1 });
 projectSchema.index({ isPublished: 1 });
 projectSchema.index({ isFeatured: 1 });
