@@ -131,12 +131,24 @@ const projectSchema = new mongoose.Schema({
         required: [true, 'Project start date is required']
     },
 
+    // In your Project.js model, update the endDate validation:
+    // In your Project.js model, update the endDate validation:
+    // In your models/Project.js file, find the endDate field and replace it with this:
     endDate: {
         type: Date,
         validate: {
             validator: function (v) {
-                if (!v) return true; // Optional field
-                return v >= this.startDate;
+                // Allow null/undefined (optional field)
+                if (!v) return true;
+
+                // Allow if no startDate (shouldn't happen, but safety check)
+                if (!this.startDate) return true;
+
+                // Convert to dates and compare
+                const start = new Date(this.startDate);
+                const end = new Date(v);
+
+                return end > start;
             },
             message: 'End date must be after start date'
         }

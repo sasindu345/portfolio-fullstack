@@ -1,63 +1,105 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { authService } from '../services/authService';
+// src/context/AuthContext.js
+import React, { createContext, useState, useContext, useEffect } from 'react';
 
 const AuthContext = createContext();
 
-// Hook to use auth anywhere in your app
 export const useAuth = () => {
     const context = useContext(AuthContext);
     if (!context) {
-        throw new Error('useAuth must be used within AuthProvider');
+        throw new Error('useAuth must be used within an AuthProvider');
     }
     return context;
 };
 
-// Provider component to wrap your app
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
     // Check if user is logged in when app starts
     useEffect(() => {
-        checkAuth();
+        checkAuthStatus();
     }, []);
 
-    const checkAuth = async () => {
+    const checkAuthStatus = () => {
         try {
-            if (authService.isAuthenticated()) {
-                const profile = await authService.getProfile();
-                setUser(profile.data);
+            const token = localStorage.getItem('authToken');
+            const userData = localStorage.getItem('userData');
+
+            console.log('Checking auth status - Token:', !!token, 'UserData:', !!userData);
+
+            if (token && userData) {
+                const parsedUser = JSON.parse(userData);
+                console.log('User found:', parsedUser);
+                setUser(parsedUser);
+            } else {
+                console.log('No auth data found');
+                setUser(null);
             }
         } catch (error) {
-            console.error('Auth check failed:', error);
-            authService.logout();
+            console.error('Error checking auth status:', error);
+            // Clear invalid data
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('userData');
+            setUser(null);
         } finally {
             setLoading(false);
         }
     };
 
-    // Login function
     const login = async (email, password) => {
-        const response = await authService.login(email, password);
-        if (response.success) {
-            const profile = await authService.getProfile();
-            setUser(profile.data);
+        try {
+            // Replace with your actual login API endpoint
+            const response = await fetch('http://localhost:5001/api/auth/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email, password }),
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || 'Login failed');
+            }
+
+            // Store token and user data
+            localStorage.setItem('authToken', data.token);
+            localStorage.setItem('userData', JSON.stringify(data.user));
+
+            setUser(data.user);
+            return { success: true };
+
+        } catch (error) {
+            console.error('Login error:', error);
+            return { success: false, error: error.message };
         }
-        return response;
     };
 
-    // Logout function
     const logout = () => {
-        authService.logout();
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('userData');
         setUser(null);
+    };
+
+    const isAuthenticated = () => {
+        const token = localStorage.getItem('authToken');
+        const hasUser = user !== null;
+        console.log('isAuthenticated check - Token:', !!token, 'User:', !!hasUser);
+        return hasUser && token;
+    };
+
+    const isAdmin = () => {
+        return user && (user.role === 'admin' || user.isAdmin === true);
     };
 
     const value = {
         user,
-        loading,
         login,
         logout,
-        isAuthenticated: !!user
+        loading,
+        isAuthenticated: isAuthenticated(),
+        isAdmin: isAdmin(),
     };
 
     return (

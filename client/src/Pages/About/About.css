@@ -1,15 +1,36 @@
-/* About Section */
+/* src/pages/About/About.css */
+
+/* --- Root Variables for Consistency (Matching Contact/Project Theme) --- */
+:root {
+    --primary-dark: #0a0f1c;
+    --secondary-dark: #1a2332;
+    --accent-blue: #3b82f6;
+    --accent-light-blue: #60a5fa;
+    --accent-cyan: #06b6d4;
+    --text-primary: #f8fafc;
+    --text-secondary: #cbd5e1;
+    --text-muted: #94a3b8;
+    --glass-bg: rgba(30, 41, 59, 0.4);
+    --glass-border: rgba(148, 163, 184, 0.1);
+}
+
+/* --- About Section Container --- */
 .about {
     padding: 100px 0;
-    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+    /* Apply the dark background theme */
+    background: linear-gradient(135deg, var(--primary-dark) 0%, var(--secondary-dark) 50%, #0f172a 100%);
     min-height: 100vh;
-    color: white;
+    color: var(--text-primary);
+    position: relative;
+    overflow-x: hidden;
 }
 
 .about-container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 2rem;
+    position: relative;
+    z-index: 1;
 }
 
 /* Header */
@@ -21,10 +42,14 @@
 
 .about-title {
     font-size: 2.5rem;
-    font-weight: 700;
-    color: white;
+    font-weight: 800;
     margin-bottom: 0.5rem;
     position: relative;
+    /* Gradient Text */
+    background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-cyan) 50%, var(--accent-light-blue) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
 .about-title::after {
@@ -35,13 +60,13 @@
     transform: translateX(-50%);
     width: 60px;
     height: 3px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-cyan) 100%);
     border-radius: 2px;
 }
 
 .about-subtitle {
     font-size: 1.1rem;
-    color: rgba(255, 255, 255, 0.8);
+    color: var(--text-secondary);
     margin-top: 1rem;
 }
 
@@ -60,27 +85,27 @@
 }
 
 .about-intro h3 {
-    font-size: 1.5rem;
-    color: white;
+    font-size: 1.6rem;
+    color: var(--accent-light-blue);
     margin-bottom: 1rem;
-    font-weight: 600;
+    font-weight: 700;
 }
 
 .about-intro p {
-    font-size: 1.1rem;
+    font-size: 1.05rem;
     line-height: 1.7;
-    color: rgba(255, 255, 255, 0.9);
+    color: var(--text-secondary);
     margin-bottom: 1.5rem;
 }
 
-/* Personal Details */
+/* Personal Details (Glassmorphism Card) */
 .about-details {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: var(--glass-bg);
+    backdrop-filter: blur(15px);
+    border: 1px solid var(--glass-border);
     padding: 2rem;
-    border-radius: 15px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
     margin: 2rem 0;
 }
 
@@ -88,8 +113,8 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.75rem 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 0.85rem 0;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.1);
 }
 
 .detail-item:last-child {
@@ -98,36 +123,38 @@
 
 .detail-label {
     font-weight: 600;
-    color: white;
+    color: var(--text-primary);
     font-size: 0.95rem;
 }
 
 .detail-value {
-    color: rgba(255, 255, 255, 0.8);
+    color: var(--text-secondary);
     font-size: 0.95rem;
 }
 
 /* Download Button */
 .about-actions {
-    margin-top: 2rem;
+    margin-top: 2.5rem;
 }
 
 .btn-download {
     display: inline-block;
     padding: 1rem 2rem;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-cyan) 100%);
     color: white;
     text-decoration: none;
     border-radius: 50px;
     font-weight: 600;
     font-size: 1rem;
     transition: all 0.3s ease;
-    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 5px 15px rgba(59, 130, 246, 0.3);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .btn-download:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.5);
 }
 
 /* Right Side */
@@ -138,21 +165,22 @@
 /* About Image */
 .about-image {
     position: relative;
-    margin-bottom: 2rem;
-    border-radius: 15px;
+    margin-bottom: 2.5rem;
+    border-radius: 20px;
     overflow: hidden;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    border: 2px solid var(--glass-border);
 }
 
 .about-image img {
     width: 100%;
     height: 400px;
     object-fit: cover;
-    transition: transform 0.3s ease;
+    transition: transform 0.4s ease;
 }
 
 .about-image:hover img {
-    transform: scale(1.05);
+    transform: scale(1.03);
 }
 
 .image-overlay {
@@ -161,31 +189,31 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(45deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+    background: linear-gradient(45deg, rgba(59, 130, 246, 0.1), rgba(6, 182, 212, 0.1));
     pointer-events: none;
 }
 
-/* Skills Section */
+/* Skills Section (Glassmorphism Card) */
 .about-skills {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: var(--glass-bg);
+    backdrop-filter: blur(15px);
+    border: 1px solid var(--glass-border);
     padding: 2rem;
-    border-radius: 15px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
 }
 
 .about-skills h4 {
-    font-size: 1.3rem;
-    color: white;
+    font-size: 1.4rem;
+    color: var(--accent-light-blue);
     margin-bottom: 1.5rem;
-    font-weight: 600;
+    font-weight: 700;
 }
 
 .skills-grid {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 1.25rem;
 }
 
 .skill-item {
@@ -195,28 +223,52 @@
 
 .skill-name {
     font-weight: 600;
-    color: white;
+    color: var(--text-primary);
     margin-bottom: 0.5rem;
     font-size: 0.95rem;
 }
 
 .skill-bar {
     width: 100%;
-    height: 8px;
-    background: rgba(255, 255, 255, 0.2);
+    height: 10px;
+    background: rgba(148, 163, 184, 0.1);
     border-radius: 10px;
     overflow: hidden;
 }
 
 .skill-progress {
     height: 100%;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(90deg, var(--accent-blue) 0%, var(--accent-cyan) 100%);
     border-radius: 10px;
-    transition: width 1s ease-in-out;
-    animation: fillSkill 2s ease-in-out;
+    transition: width 1.5s ease-in-out;
 }
 
-/* Skill Progress Widths */
+/* Note: The 'fillSkill' animation logic needs to be handled via JavaScript
+   for dynamic values, or you can use CSS variables like this: */
+
+/* Example: Setting CSS variable for animation */
+@keyframes fillSkill {
+    from {
+        width: 0%;
+    }
+
+    /* Percentage is handled by the inline style/data attribute */
+}
+
+.skill-progress {
+    animation: fillSkill 1.5s ease-in-out forwards;
+}
+
+/* Skill Progress Widths (For Initial Load/Fallback) */
+.skill-progress[data-percent]::before {
+    content: attr(data-percent) '%';
+    position: absolute;
+    right: 0;
+    top: -20px;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
 .skill-progress[data-percent="95"] {
     width: 95%;
 }
@@ -237,36 +289,48 @@
     width: 80%;
 }
 
-/* Stats Section */
+
+/* Stats Section (Glassmorphism Card) */
 .about-stats {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 2rem;
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: var(--glass-bg);
+    backdrop-filter: blur(15px);
+    border: 1px solid var(--glass-border);
     padding: 3rem 2rem;
     border-radius: 20px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
     animation: fadeInUp 0.8s ease-out 0.3s both;
 }
 
 .stat-item {
     text-align: center;
     padding: 1rem;
+    border-right: 1px solid var(--glass-border);
+}
+
+.stat-item:last-child {
+    border-right: none;
 }
 
 .stat-item h3 {
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: #667eea;
-    margin-bottom: 0.5rem;
+    font-size: 2.8rem;
+    font-weight: 800;
+    color: var(--accent-blue);
+    margin-bottom: 0.25rem;
+    background: linear-gradient(135deg, var(--accent-light-blue), var(--accent-cyan));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
 .stat-item p {
     font-size: 0.95rem;
-    color: rgba(255, 255, 255, 0.8);
+    color: var(--text-secondary);
     font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 /* Animations */
@@ -306,17 +370,25 @@
     }
 }
 
-@keyframes fillSkill {
-    from {
-        width: 0;
+/* Responsive Design */
+@media (max-width: 992px) {
+    .about-content {
+        grid-template-columns: 1fr;
+        gap: 3rem;
     }
 
-    to {
-        width: var(--skill-width);
+    .about-right {
+        /* On smaller screens, put the image above skills */
+        display: flex;
+        flex-direction: column;
+    }
+
+    .about-image {
+        order: -1;
+        /* Move image above skills */
     }
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
     .about {
         padding: 80px 0;
@@ -330,23 +402,32 @@
         font-size: 2rem;
     }
 
-    .about-content {
-        grid-template-columns: 1fr;
-        gap: 3rem;
-    }
-
     .about-stats {
         grid-template-columns: repeat(2, 1fr);
         gap: 1.5rem;
         padding: 2rem 1rem;
     }
 
-    .about-image img {
-        height: 300px;
+    .stat-item {
+        border-right: none;
+        border-bottom: 1px solid var(--glass-border);
     }
 
-    .about-details {
-        padding: 1.5rem;
+    .stat-item:nth-child(2) {
+        border-bottom: 1px solid var(--glass-border);
+    }
+
+    .stat-item:nth-child(odd) {
+        border-right: 1px solid var(--glass-border);
+    }
+
+    .stat-item:last-child {
+        border-bottom: none;
+        border-right: none;
+    }
+
+    .about-image img {
+        height: 300px;
     }
 }
 
@@ -356,7 +437,7 @@
     }
 
     .about-intro h3 {
-        font-size: 1.3rem;
+        font-size: 1.4rem;
     }
 
     .about-intro p {
@@ -368,8 +449,17 @@
         gap: 1rem;
     }
 
+    .stat-item {
+        border-right: none !important;
+        border-bottom: 1px solid var(--glass-border);
+    }
+
+    .stat-item:last-child {
+        border-bottom: none;
+    }
+
     .stat-item h3 {
-        font-size: 2rem;
+        font-size: 2.5rem;
     }
 
     .about-skills,

@@ -1,30 +1,32 @@
-// server/middleware/upload.js
+// middleware/upload.js - FIXED VERSION
 import multer from 'multer';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import cors from 'cors';
+import fs from 'fs';
 
-
-// Get current directory (needed for ES6 modules)
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+// Ensure upload directory exists
+const uploadsDir = path.join(__dirname, '../uploads/projects');
+if (!fs.existsSync(uploadsDir)) {
+    fs.mkdirSync(uploadsDir, { recursive: true });
+    console.log('Created uploads directory:', uploadsDir);
+}
 
 // Configure storage
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        // Save files to uploads/projects folder
-        cb(null, path.join(__dirname, '../uploads/projects'));
+        cb(null, uploadsDir);
     },
     filename: function (req, file, cb) {
-        // Create unique filename: timestamp-randomnumber.ext
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
         cb(null, uniqueSuffix + path.extname(file.originalname));
     }
 });
 
-// File filter - only allow images
+// File filter
 const fileFilter = (req, file, cb) => {
-    // Check if file is an image
     if (file.mimetype.startsWith('image/')) {
         cb(null, true);
     } else {
@@ -37,7 +39,7 @@ const upload = multer({
     storage: storage,
     fileFilter: fileFilter,
     limits: {
-        fileSize: 5 * 1024 * 1024, // 5MB max file size
+        fileSize: 5 * 1024 * 1024, // 5MB
     }
 });
 

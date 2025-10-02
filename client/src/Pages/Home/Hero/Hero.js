@@ -1,5 +1,6 @@
 import React from 'react';
 import './Hero.css';
+import { Link } from "react-router-dom";
 
 const Hero = () => {
   // ========== CHANGE YOUR PERSONAL DETAILS HERE ==========
@@ -26,7 +27,7 @@ const Hero = () => {
     cvFile: "/files/john-doe-cv.pdf", // CHANGE THIS: Path to your CV/Resume file
 
     // Social links - add your actual links
-    portfolioSection: "#projects", // CHANGE THIS: Link to your work section (usually #projects or #portfolio)
+    portfolioSection: "/projects", // CHANGE THIS: Link to your work section (usually #projects or #portfolio)
   };
 
   // ========== COMPONENT RENDER (Don't change unless you understand React) ==========
@@ -47,13 +48,13 @@ const Hero = () => {
 
             {/* Action buttons */}
             <div className="hero-buttons">
-              <a
-                href={personalDetails.portfolioSection}
+              <Link
+                to={personalDetails.portfolioSection}
                 className="btn btn-primary"
                 aria-label="View my work portfolio"
               >
                 View My Work
-              </a>
+              </Link>
               <a
                 href={personalDetails.cvFile}
                 className="btn btn-secondary"

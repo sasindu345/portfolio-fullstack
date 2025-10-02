@@ -1,244 +1,282 @@
 import React, { useState, useEffect } from 'react';
 import './Project.css';
+import projectService from '../../services/projectService';
 
-const Projects = () => {
-    // Sample project data - Replace with your real projects
-    const [projects] = useState([
-        {
-            id: 1,
-            title: "E-Commerce Website",
-            description: "Full-stack e-commerce platform with user authentication, shopping cart, and payment integration. Built with modern technologies for optimal performance.",
-            image: "/images/project1.jpg", // Add your project images to public/images/
-            techStack: ["React", "Node.js", "MongoDB", "Express", "Stripe"],
-            liveLink: "https://your-project-live-link.com",
-            githubLink: "https://github.com/yourusername/project1",
-            featured: true
-        },
-        {
-            id: 2,
-            title: "Task Management App",
-            description: "Collaborative task management application with real-time updates, team collaboration features, and intuitive drag-and-drop interface.",
-            image: "/images/project2.jpg",
-            techStack: ["React", "Firebase", "Material-UI", "Socket.io"],
-            liveLink: "https://your-project-live-link.com",
-            githubLink: "https://github.com/yourusername/project2",
-            featured: true
-        },
-        {
-            id: 3,
-            title: "Weather Dashboard",
-            description: "Interactive weather dashboard displaying current conditions, 7-day forecasts, and weather maps with location-based services.",
-            image: "/images/project3.jpg",
-            techStack: ["JavaScript", "HTML5", "CSS3", "Weather API"],
-            liveLink: "https://your-project-live-link.com",
-            githubLink: "https://github.com/yourusername/project3",
-            featured: false
-        },
-        {
-            id: 4,
-            title: "Portfolio Website",
-            description: "Professional portfolio website showcasing projects and skills. Features responsive design and modern animations.",
-            image: "/images/project4.jpg",
-            techStack: ["React", "CSS3", "Node.js", "MongoDB"],
-            liveLink: "https://your-portfolio-link.com",
-            githubLink: "https://github.com/yourusername/portfolio",
-            featured: false
-        }
-    ]);
+const Project = () => {
+    const [projects, setProjects] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState('');
+    const [selectedProject, setSelectedProject] = useState(null);
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-    const [filter, setFilter] = useState('all');
-    const [filteredProjects, setFilteredProjects] = useState(projects);
-    const [isLoading, setIsLoading] = useState(true);
-
-    // Simulate loading effect
     useEffect(() => {
-        const timer = setTimeout(() => {
-            setIsLoading(false);
-        }, 1000);
+        const fetchProjects = async () => {
+            try {
+                setLoading(true);
+                const result = await projectService.getAllProjects();
 
-        return () => clearTimeout(timer);
+                if (result.success) {
+                    setProjects(result.data.projects || result.data || []);
+                } else {
+                    setError(result.error || 'Failed to load projects');
+                }
+            } catch (err) {
+                console.error('Error fetching projects:', err);
+                setError('Something went wrong while loading projects');
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchProjects();
     }, []);
 
-    // Filter projects based on selected filter
-    useEffect(() => {
-        if (filter === 'all') {
-            setFilteredProjects(projects);
-        } else if (filter === 'featured') {
-            setFilteredProjects(projects.filter(project => project.featured));
-        } else {
-            // Filter by technology (you can expand this)
-            setFilteredProjects(
-                projects.filter(project =>
-                    project.techStack.some(tech =>
-                        tech.toLowerCase().includes(filter.toLowerCase())
-                    )
-                )
-            );
-        }
-    }, [filter, projects]);
-
-    // Handle filter change
-    const handleFilterChange = (newFilter) => {
-        setFilter(newFilter);
+    // Handle modal
+    const openModal = (project) => {
+        setSelectedProject(project);
+        setCurrentImageIndex(0);
+        document.body.style.overflow = 'hidden';
     };
 
-    // Loading state
-    if (isLoading) {
+    const closeModal = () => {
+        setSelectedProject(null);
+        setCurrentImageIndex(0);
+        document.body.style.overflow = 'unset';
+    };
+
+    // Handle image gallery
+    const nextImage = () => {
+        if (selectedProject?.images?.gallery?.length > 0) {
+            setCurrentImageIndex((prev) =>
+                (prev + 1) % (selectedProject.images.gallery.length + 1)
+            );
+        }
+    };
+
+    const prevImage = () => {
+        if (selectedProject?.images?.gallery?.length > 0) {
+            setCurrentImageIndex((prev) =>
+                prev === 0 ? selectedProject.images.gallery.length : prev - 1
+            );
+        }
+    };
+
+    // Get image URL helper
+    const getImageUrl = (imagePath) => {
+        if (!imagePath) return '/images/placeholder-project.png';
+        if (imagePath.startsWith('http')) return imagePath;
+
+        // If path already has the full server path format
+        if (imagePath.startsWith('/api/uploads/')) {
+            return `http://localhost:5001${imagePath}`;
+        }
+
+        // Handle direct filenames
+        return `http://localhost:5001/api/uploads/projects/${imagePath}`;
+    };
+    // Format date helper
+    const formatDate = (date) => {
+        return new Date(date).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long'
+        });
+    };
+
+    // Close modal on ESC key
+    useEffect(() => {
+        const handleEsc = (e) => {
+            if (e.keyCode === 27) closeModal();
+        };
+        window.addEventListener('keydown', handleEsc);
+        return () => window.removeEventListener('keydown', handleEsc);
+    }, []);
+
+    if (loading) {
         return (
-            <div className="projects-page">
-                <div className="loading-container">
-                    <div className="loading-spinner"></div>
-                    <p>Loading Projects...</p>
+            <div className="project-container">
+                <div className="loading">
+                    <div className="spinner"></div>
+                    <p>Loading projects...</p>
+                </div>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="project-container">
+                <div className="error">
+                    <h3>Oops! Something went wrong</h3>
+                    <p>{error}</p>
+                    <button onClick={() => window.location.reload()}>Try Again</button>
                 </div>
             </div>
         );
     }
 
     return (
-        <div className="projects-page">
-            {/* Page Header */}
-            <section className="projects-header">
-                <div className="container">
-                    <h1 className="page-title">My Projects</h1>
-                    <p className="page-subtitle">
-                        Explore my latest work and development projects. Each project represents
-                        a unique challenge and learning experience in my journey as a developer.
-                    </p>
-                </div>
-            </section>
+        <div className="project-container">
+            <div className="project-header">
+                <h1>My Projects</h1>
+                <p>Click on any project to explore in detail</p>
+            </div>
 
-            {/* Filter Buttons */}
-            <section className="projects-filters">
-                <div className="container">
-                    <div className="filter-buttons">
-                        <button
-                            className={`filter-btn ${filter === 'all' ? 'active' : ''}`}
-                            onClick={() => handleFilterChange('all')}
+            <div className="projects-grid">
+                {projects.length > 0 ? (
+                    projects.map((project) => (
+                        <div
+                            key={project._id}
+                            className="project-card"
+                            onClick={() => openModal(project)}
                         >
-                            All Projects
-                        </button>
-                        <button
-                            className={`filter-btn ${filter === 'featured' ? 'active' : ''}`}
-                            onClick={() => handleFilterChange('featured')}
-                        >
-                            Featured
-                        </button>
-                        <button
-                            className={`filter-btn ${filter === 'react' ? 'active' : ''}`}
-                            onClick={() => handleFilterChange('react')}
-                        >
-                            React
-                        </button>
-                        <button
-                            className={`filter-btn ${filter === 'javascript' ? 'active' : ''}`}
-                            onClick={() => handleFilterChange('javascript')}
-                        >
-                            JavaScript
-                        </button>
-                    </div>
-                </div>
-            </section>
+                            <div className="project-image">
+                                <img
+                                    src={getImageUrl(project.images?.thumbnail)}
+                                    alt={project.title}
+                                    onError={(e) => {
+                                        e.target.src = '/images/placeholder-project.png';
+                                    }}
+                                />
+                                <div className="project-overlay">
+                                    <span className="view-details">View Details</span>
+                                </div>
+                            </div>
 
-            {/* Projects Grid */}
-            <section className="projects-grid">
-                <div className="container">
-                    <div className="projects-container">
-                        {filteredProjects.length > 0 ? (
-                            filteredProjects.map((project) => (
-                                <div key={project.id} className="project-card">
-                                    {/* Project Image */}
-                                    <div className="project-image">
-                                        <img
-                                            src={project.image}
-                                            alt={project.title}
-                                            onError={(e) => {
-                                                // Fallback image if project image fails to load
-                                                e.target.src = 'https://via.placeholder.com/400x250/1a2332/d4af37?text=Project+Image';
-                                            }}
-                                        />
-                                        <div className="project-overlay">
-                                            <div className="project-links">
-                                                <a
-                                                    href={project.liveLink}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    className="project-link"
-                                                >
-                                                    <span>Live Demo</span>
-                                                </a>
-                                                <a
-                                                    href={project.githubLink}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    className="project-link"
-                                                >
-                                                    <span>View Code</span>
-                                                </a>
-                                            </div>
-                                        </div>
+                            <div className="project-content">
+                                <div className="project-meta">
+                                    <span className={`status status-${project.status}`}>
+                                        {project.status}
+                                    </span>
+                                    <span className="category">{project.category}</span>
+                                </div>
+
+                                <h3>{project.title}</h3>
+                                <p className="project-description">
+                                    {project.shortDescription || project.description}
+                                </p>
+
+                                {project.technologies && project.technologies.length > 0 && (
+                                    <div className="project-tech">
+                                        {project.technologies.slice(0, 3).map((tech, index) => (
+                                            <span key={index} className="tech-tag">{tech}</span>
+                                        ))}
+                                        {project.technologies.length > 3 && (
+                                            <span className="tech-more">+{project.technologies.length - 3}</span>
+                                        )}
                                     </div>
+                                )}
 
-                                    {/* Project Content */}
-                                    <div className="project-content">
-                                        <div className="project-header">
-                                            <h3 className="project-title">{project.title}</h3>
-                                            {project.featured && <span className="featured-badge">Featured</span>}
+                                {project.isFeatured && (
+                                    <div className="featured-badge">⭐ Featured</div>
+                                )}
+                            </div>
+                        </div>
+                    ))
+                ) : (
+                    <div className="no-projects">
+                        <h3>No projects found</h3>
+                        <p>Projects will appear here once they're added to the database.</p>
+                    </div>
+                )}
+            </div>
+
+            {/* Modal */}
+            {selectedProject && (
+                <div className="modal-overlay" onClick={closeModal}>
+                    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                        <button className="modal-close" onClick={closeModal}>×</button>
+
+                        <div className="modal-header">
+                            <h2>{selectedProject.title}</h2>
+                            <div className="modal-meta">
+                                <span className={`status status-${selectedProject.status}`}>
+                                    {selectedProject.status}
+                                </span>
+                                <span className="date-range">
+                                    {formatDate(selectedProject.startDate)}
+                                    {selectedProject.endDate && ` - ${formatDate(selectedProject.endDate)}`}
+                                </span>
+                            </div>
+                        </div>
+
+                        <div className="modal-body">
+                            <div className="modal-image-section">
+                                <div className="main-image">
+                                    <img
+                                        src={getImageUrl(
+                                            currentImageIndex === 0
+                                                ? selectedProject.images?.thumbnail
+                                                : selectedProject.images?.gallery[currentImageIndex - 1]
+                                        )}
+                                        alt={selectedProject.title}
+                                    />
+                                    {selectedProject.images?.gallery?.length > 0 && (
+                                        <div className="image-controls">
+                                            <button onClick={prevImage}>‹</button>
+                                            <span>{currentImageIndex + 1} / {(selectedProject.images?.gallery?.length || 0) + 1}</span>
+                                            <button onClick={nextImage}>›</button>
                                         </div>
+                                    )}
+                                </div>
+                            </div>
 
-                                        <p className="project-description">{project.description}</p>
+                            <div className="modal-details">
+                                <div className="description-section">
+                                    <h3>About This Project</h3>
+                                    <p>{selectedProject.description}</p>
+                                </div>
 
-                                        {/* Tech Stack */}
-                                        <div className="tech-stack">
-                                            {project.techStack.map((tech, index) => (
-                                                <span key={index} className="tech-tag">
-                                                    {tech}
-                                                </span>
-                                            ))}
-                                        </div>
-
-                                        {/* Project Links */}
-                                        <div className="project-actions">
-                                            <a
-                                                href={project.liveLink}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="primary-button"
-                                            >
-                                                View Live
-                                            </a>
-                                            <a
-                                                href={project.githubLink}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="secondary-button"
-                                            >
-                                                Source Code
-                                            </a>
-                                        </div>
+                                <div className="tech-section">
+                                    <h3>Technologies Used</h3>
+                                    <div className="tech-grid">
+                                        {selectedProject.technologies?.map((tech, index) => (
+                                            <span key={index} className="tech-pill">{tech}</span>
+                                        ))}
                                     </div>
                                 </div>
-                            ))
-                        ) : (
-                            <div className="no-projects">
-                                <p>No projects found for the selected filter.</p>
-                            </div>
-                        )}
-                    </div>
-                </div>
-            </section>
 
-            {/* Call to Action */}
-            <section className="projects-cta">
-                <div className="container">
-                    <div className="cta-content">
-                        <h2>Interested in Working Together?</h2>
-                        <p>I'm always open to discussing new opportunities and exciting projects.</p>
-                        <a href="/contact" className="primary-button">Get In Touch</a>
+                                <div className="links-section">
+                                    <h3>Project Links</h3>
+                                    <div className="modal-links">
+                                        {selectedProject.links?.liveDemo && (
+                                            <a
+                                                href={selectedProject.links.liveDemo}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="modal-link live-demo"
+                                            >
+                                                🚀 Live Demo
+                                            </a>
+                                        )}
+                                        {selectedProject.links?.github && (
+                                            <a
+                                                href={selectedProject.links.github}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="modal-link github"
+                                            >
+                                                📂 GitHub Repository
+                                            </a>
+                                        )}
+                                        {selectedProject.links?.documentation && (
+                                            <a
+                                                href={selectedProject.links.documentation}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="modal-link docs"
+                                            >
+                                                📚 Documentation
+                                            </a>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </section>
+            )}
         </div>
     );
 };
 
-export default Projects;
+export default Project;

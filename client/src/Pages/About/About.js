@@ -69,7 +69,7 @@ const About = () => {
 
                         {/* CHANGE THIS: Replace with your image */}
                         <div className="about-image">
-                            <img src="/images/about-me.jpg" alt="About Me" />
+                            <img src="Images/home/myimg.jpeg" alt="About Me" />
                             <div className="image-overlay"></div>
                         </div>
 

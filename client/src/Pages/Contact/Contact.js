@@ -4,6 +4,29 @@ import React, { useState } from 'react';
 import './Contact.css';
 import { contactService } from '../../services/contactService';
 
+// Import Font Awesome components
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
+// 1. Import SOLID icons (used for contact info and loading spinner)
+import {
+    faEnvelope,
+    faPhone,
+    faMapMarkerAlt,
+    faClock,
+    faSpinner
+} from '@fortawesome/free-solid-svg-icons';
+
+// 2. Import BRAND icons (used for social media links)
+import {
+    faLinkedinIn,
+    faGithub as faGithubBrands,
+    faTwitter as faTwitterBrands,
+    faInstagram as faInstagramBrands
+} from '@fortawesome/free-brands-svg-icons';
+// NOTE: We only import and use the aliased brand icons, not the general solid ones.
+
+
+
 const Contact = () => {
     // State to store form data
     const [formData, setFormData] = useState({
@@ -17,14 +40,6 @@ const Contact = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [showMessage, setShowMessage] = useState('');
 
-    // Test connection when component loads
-    React.useEffect(() => {
-        contactService.testConnection()
-            .then(data => console.log('Backend test successful:', data))
-            .catch(error => console.error('Backend test failed:', error));
-    }, []);
-
-    // Handle input changes
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({
@@ -33,37 +48,32 @@ const Contact = () => {
         }));
     };
 
-    // Handle form submission
     const handleSubmit = async (e) => {
-        e.preventDefault(); // Prevent page refresh
+        e.preventDefault();
         setIsLoading(true);
+        setShowMessage('');
+
+        if (formData.message.length < 10) {
+            setShowMessage('error');
+            setIsLoading(false);
+            return;
+        }
 
         try {
-            // Here you would normally send data to your backend
-            // For now, we'll just simulate sending
-            console.log('Form Data:', formData);
-
-            // Simulate API call delay
-            await new Promise(resolve => setTimeout(resolve, 2000));
-
-            // Show success message
+            const result = await contactService.submitContact(formData);
+            console.log('Message sent successfully:', result);
             setShowMessage('success');
-
-            // Reset form after successful submission
             setFormData({
                 name: '',
                 email: '',
                 subject: '',
                 message: ''
             });
-
         } catch (error) {
             console.error('Error sending message:', error);
             setShowMessage('error');
         } finally {
             setIsLoading(false);
-
-            // Hide message after 5 seconds
             setTimeout(() => {
                 setShowMessage('');
             }, 5000);
@@ -182,7 +192,7 @@ const Contact = () => {
                                 >
                                     {isLoading ? (
                                         <>
-                                            <div className="spinner"></div>
+                                            <FontAwesomeIcon icon={faSpinner} spin className="spinner-icon" />
                                             Sending...
                                         </>
                                     ) : (
@@ -203,7 +213,7 @@ const Contact = () => {
                                 {/* Email */}
                                 <div className="info-item">
                                     <div className="info-icon">
-                                        📧
+                                        <FontAwesomeIcon icon={faEnvelope} />
                                     </div>
                                     <div className="info-content">
                                         <h3 className="info-title">Email</h3>
@@ -214,7 +224,7 @@ const Contact = () => {
                                 {/* Phone */}
                                 <div className="info-item">
                                     <div className="info-icon">
-                                        📱
+                                        <FontAwesomeIcon icon={faPhone} />
                                     </div>
                                     <div className="info-content">
                                         <h3 className="info-title">Phone</h3>
@@ -225,7 +235,7 @@ const Contact = () => {
                                 {/* Location */}
                                 <div className="info-item">
                                     <div className="info-icon">
-                                        📍
+                                        <FontAwesomeIcon icon={faMapMarkerAlt} />
                                     </div>
                                     <div className="info-content">
                                         <h3 className="info-title">Location</h3>
@@ -236,7 +246,7 @@ const Contact = () => {
                                 {/* Response Time */}
                                 <div className="info-item">
                                     <div className="info-icon">
-                                        ⏰
+                                        <FontAwesomeIcon icon={faClock} />
                                     </div>
                                     <div className="info-content">
                                         <h3 className="info-title">Response Time</h3>
@@ -256,7 +266,7 @@ const Contact = () => {
                                         target="_blank"
                                         rel="noopener noreferrer"
                                     >
-                                        💼
+                                        <FontAwesomeIcon icon={faLinkedinIn} />
                                     </a>
                                     <a
                                         href="https://github.com/your-username"
@@ -265,7 +275,7 @@ const Contact = () => {
                                         target="_blank"
                                         rel="noopener noreferrer"
                                     >
-                                        🐙
+                                        <FontAwesomeIcon icon={faGithubBrands} />
                                     </a>
                                     <a
                                         href="https://twitter.com/your-username"
@@ -274,7 +284,7 @@ const Contact = () => {
                                         target="_blank"
                                         rel="noopener noreferrer"
                                     >
-                                        🐦
+                                        <FontAwesomeIcon icon={faTwitterBrands} />
                                     </a>
                                     <a
                                         href="https://instagram.com/your-username"
@@ -283,7 +293,7 @@ const Contact = () => {
                                         target="_blank"
                                         rel="noopener noreferrer"
                                     >
-                                        📷
+                                        <FontAwesomeIcon icon={faInstagramBrands} />
                                     </a>
                                 </div>
                             </div>

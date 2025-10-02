@@ -5,8 +5,8 @@ import Project from '../models/Project.js';
 // @access  Public
 export const getAllProjects = async (req, res) => {
     try {
-        const projects = await Project.find({ status: 'published' })
-            .sort({ createdAt: -1 }); // Newest first
+        const projects = await Project.find({ isPublished: true })
+            .sort({ createdAt: -1 }); // Add missing sort
 
         res.json({
             success: true,
@@ -21,7 +21,6 @@ export const getAllProjects = async (req, res) => {
         });
     }
 };
-
 // @desc    Get single project by ID (public)
 // @route   GET /api/projects/:id
 // @access  Public
@@ -37,7 +36,7 @@ export const getProject = async (req, res) => {
         }
 
         // Only show published projects to public
-        if (project.status !== 'published' && !req.user?.isAdmin) {
+        if (!project.isPublished && !req.user?.isAdmin) {
             return res.status(404).json({
                 success: false,
                 message: 'Project not found'
@@ -57,39 +56,97 @@ export const getProject = async (req, res) => {
     }
 };
 
-// @desc    Create new project (admin only)
+// @desc    Create new project with JSON data (admin only)
 // @route   POST /api/projects
 // @access  Private/Admin
 export const createProject = async (req, res) => {
     try {
-        const {
-            title,
-            shortDescription,
-            description,
-            technologies,
-            category,
-            images,
-            startDate
-        } = req.body;
+        console.log('Content-Type:', req.headers['content-type']);
+        console.log('Request body:', req.body);
 
-        // Basic validation
-        if (!title || !shortDescription || !description) {
-            return res.status(400).json({
-                success: false,
-                message: 'Title, short description, and description are required'
-            });
+        // Check if this is form-data or JSON
+        const isFormData = req.headers['content-type']?.includes('multipart/form-data');
+
+        let projectData;
+
+        if (isFormData) {
+            // Handle form-data with file uploads
+            const {
+                title,
+                shortDescription,
+                description,
+                category,
+                startDate,
+                endDate,
+                isFeatured,
+                isPublished
+            } = req.body;
+
+            // Parse JSON fields from form-data
+            const technologies = JSON.parse(req.body.technologies || '[]');
+            const links = JSON.parse(req.body.links || '{}');
+
+            // Handle uploaded image
+            const images = {
+                thumbnail: req.file ? req.file.filename : 'default-image.jpg',
+                gallery: []
+            };
+
+            projectData = {
+                title,
+                shortDescription,
+                description,
+                technologies,
+                category,
+                images,
+                links,
+                startDate,
+                endDate: endDate || null,
+                isFeatured: isFeatured === 'true',
+                isPublished: isPublished === 'true'
+            };
+        } else {
+            // Handle JSON data directly (no file upload)
+            const {
+                title,
+                shortDescription,
+                description,
+                technologies,
+                category,
+                images,
+                links,
+                status,
+                startDate,
+                endDate,
+                isFeatured,
+                isPublished
+            } = req.body;
+
+            // Validate required fields
+            if (!title || !shortDescription || !description || !technologies) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Missing required fields: title, shortDescription, description, technologies'
+                });
+            }
+
+            projectData = {
+                title,
+                shortDescription,
+                description,
+                technologies, // Already an array from JSON
+                category: category || 'web-development',
+                images: images || { thumbnail: 'default-image.jpg', gallery: [] },
+                links: links || {},
+                status: status || 'completed',
+                startDate,
+                endDate: endDate || null,
+                isFeatured: isFeatured === true,
+                isPublished: isPublished === true
+            };
         }
 
-        const project = await Project.create({
-            title,
-            shortDescription,
-            description,
-            technologies,
-            category: category || 'web-development',
-            images: images || { thumbnail: 'default-image.jpg' },
-            startDate: startDate || new Date(),
-            isPublished: true
-        });
+        const project = await Project.create(projectData);
 
         res.status(201).json({
             success: true,
@@ -100,7 +157,7 @@ export const createProject = async (req, res) => {
         console.error('Create project error:', error);
         res.status(500).json({
             success: false,
-            message: 'Failed to create project'
+            message: error.message || 'Failed to create project'
         });
     }
 };
@@ -108,10 +165,15 @@ export const createProject = async (req, res) => {
 // @desc    Update project (admin only)
 // @route   PUT /api/projects/:id
 // @access  Private/Admin
+// In projectController.js - Update the updateProject function:
+// Add this function if you don't have it already
+// In controllers/projectController.js, update the updateProject function:
 export const updateProject = async (req, res) => {
     try {
-        const project = await Project.findById(req.params.id);
+        console.log('Update request for project:', req.params.id);
+        console.log('Request body:', req.body);
 
+        const project = await Project.findById(req.params.id);
         if (!project) {
             return res.status(404).json({
                 success: false,
@@ -119,11 +181,57 @@ export const updateProject = async (req, res) => {
             });
         }
 
+        let updateData = { ...req.body };
+
+        // Handle technologies array
+        if (typeof updateData.technologies === 'string') {
+            updateData.technologies = updateData.technologies
+                .split(',')
+                .map(tech => tech.trim())
+                .filter(tech => tech);
+        }
+
+        // Handle boolean values
+        if (updateData.isFeatured !== undefined) {
+            updateData.isFeatured = Boolean(updateData.isFeatured);
+        }
+        if (updateData.isPublished !== undefined) {
+            updateData.isPublished = Boolean(updateData.isPublished);
+        }
+
+        // IMPORTANT: Handle endDate properly
+        if (updateData.endDate === '' || updateData.endDate === null) {
+            updateData.endDate = null;
+        }
+
+        // Manual date validation before database operation
+        if (updateData.endDate && updateData.startDate) {
+            const startDate = new Date(updateData.startDate);
+            const endDate = new Date(updateData.endDate);
+
+            if (endDate <= startDate) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'End date must be after start date'
+                });
+            }
+        }
+
+        updateData.updatedAt = Date.now();
+
+        console.log('Processed update data:', updateData);
+
         const updatedProject = await Project.findByIdAndUpdate(
             req.params.id,
-            { ...req.body, updatedAt: Date.now() },
-            { new: true, runValidators: true }
+            updateData,
+            {
+                new: true,
+                runValidators: true,
+                context: 'query' // Important for custom validators
+            }
         );
+
+        console.log('Project updated successfully');
 
         res.json({
             success: true,
@@ -134,11 +242,10 @@ export const updateProject = async (req, res) => {
         console.error('Update project error:', error);
         res.status(500).json({
             success: false,
-            message: 'Failed to update project'
+            message: error.message || 'Failed to update project'
         });
     }
 };
-
 // @desc    Delete project (admin only)
 // @route   DELETE /api/projects/:id
 // @access  Private/Admin
