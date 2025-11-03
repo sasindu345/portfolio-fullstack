@@ -7,7 +7,9 @@ import ContactCTA from './ContactCTA/ContactCTA';
 
 const Home = () => {
   return (
+
     <main className="home">
+
       <Hero />
 
       <TechStack />

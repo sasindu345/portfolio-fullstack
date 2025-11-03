@@ -1,0 +1,206 @@
+/* src/styles/theme.css */
+
+/* Dark Theme (Default) */
+:root,
+[data-theme='dark'] {
+    --primary-dark: #0a0f1c;
+    --secondary-dark: #1a2332;
+    --tertiary-dark: #0f172a;
+
+    --accent-blue: #3b82f6;
+    --accent-light-blue: #60a5fa;
+    --accent-cyan: #06b6d4;
+
+    --text-primary: #f8fafc;
+    --text-secondary: #cbd5e1;
+    --text-muted: #94a3b8;
+
+    --glass-bg: rgba(30, 41, 59, 0.4);
+    --glass-border: rgba(148, 163, 184, 0.1);
+
+    --shadow-sm: 0 4px 15px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 8px 30px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 10px 50px rgba(0, 0, 0, 0.5);
+
+    --gradient-primary: linear-gradient(135deg, #0a0f1c 0%, #1a2332 100%);
+    --gradient-accent: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+
+    --bubble-color-1: rgba(59, 130, 246, 0.1);
+    --bubble-color-2: rgba(6, 182, 212, 0.08);
+    --bubble-color-3: rgba(96, 165, 250, 0.06);
+}
+
+/* Light Theme - Improved User Friendly Colors */
+[data-theme='light'] {
+    --primary-dark: #ffffff;
+    --secondary-dark: #f1f5f9;
+    --tertiary-dark: #e2e8f0;
+
+    --accent-blue: #2563eb;
+    --accent-light-blue: #3b82f6;
+    --accent-cyan: #0ea5e9;
+
+    --text-primary: #1e293b;
+    --text-secondary: #475569;
+    --text-muted: #64748b;
+
+    --glass-bg: rgba(255, 255, 255, 0.8);
+    --glass-border: rgba(148, 163, 184, 0.3);
+
+    --shadow-sm: 0 4px 15px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 8px 30px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 10px 50px rgba(0, 0, 0, 0.12);
+
+    --gradient-primary: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
+    --gradient-accent: linear-gradient(135deg, #2563eb 0%, #0ea5e9 100%);
+
+    --bubble-color-1: rgba(37, 99, 235, 0.12);
+    --bubble-color-2: rgba(14, 165, 233, 0.1);
+    --bubble-color-3: rgba(59, 130, 246, 0.08);
+}
+
+/* Smooth theme transition */
+* {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Override transitions for animations that shouldn't be affected */
+*[class*='animate'],
+*[class*='transition-transform'],
+.skill-progress,
+.avatar-glow,
+.avatar-ring,
+.bubble {
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+/* Bubble Animation Background */
+.bubble-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.bubble {
+    position: absolute;
+    bottom: -100px;
+    border-radius: 50%;
+    opacity: 0.6;
+    animation: rise linear infinite;
+    backdrop-filter: blur(5px);
+}
+
+.bubble:nth-child(1) {
+    width: 80px;
+    height: 80px;
+    left: 10%;
+    background: var(--bubble-color-1);
+    animation-duration: 15s;
+    animation-delay: 0s;
+}
+
+.bubble:nth-child(2) {
+    width: 120px;
+    height: 120px;
+    left: 20%;
+    background: var(--bubble-color-2);
+    animation-duration: 18s;
+    animation-delay: 2s;
+}
+
+.bubble:nth-child(3) {
+    width: 60px;
+    height: 60px;
+    left: 35%;
+    background: var(--bubble-color-3);
+    animation-duration: 12s;
+    animation-delay: 4s;
+}
+
+.bubble:nth-child(4) {
+    width: 100px;
+    height: 100px;
+    left: 50%;
+    background: var(--bubble-color-1);
+    animation-duration: 20s;
+    animation-delay: 1s;
+}
+
+.bubble:nth-child(5) {
+    width: 70px;
+    height: 70px;
+    left: 65%;
+    background: var(--bubble-color-2);
+    animation-duration: 16s;
+    animation-delay: 3s;
+}
+
+.bubble:nth-child(6) {
+    width: 90px;
+    height: 90px;
+    left: 75%;
+    background: var(--bubble-color-3);
+    animation-duration: 14s;
+    animation-delay: 5s;
+}
+
+.bubble:nth-child(7) {
+    width: 110px;
+    height: 110px;
+    left: 85%;
+    background: var(--bubble-color-1);
+    animation-duration: 19s;
+    animation-delay: 0s;
+}
+
+.bubble:nth-child(8) {
+    width: 50px;
+    height: 50px;
+    left: 92%;
+    background: var(--bubble-color-2);
+    animation-duration: 13s;
+    animation-delay: 6s;
+}
+
+@keyframes rise {
+    0% {
+        bottom: -100px;
+        transform: translateX(0) scale(1);
+        opacity: 0;
+    }
+
+    10% {
+        opacity: 0.6;
+    }
+
+    50% {
+        transform: translateX(100px) scale(1.1);
+    }
+
+    90% {
+        opacity: 0.6;
+    }
+
+    100% {
+        bottom: 110vh;
+        transform: translateX(-50px) scale(0.8);
+        opacity: 0;
+    }
+}
+
+/* Mobile optimization for bubbles */
+@media (max-width: 768px) {
+    .bubble:nth-child(n+6) {
+        display: none;
+        /* Hide some bubbles on mobile for performance */
+    }
+
+    .bubble {
+        animation-duration: 10s !important;
+    }
+}

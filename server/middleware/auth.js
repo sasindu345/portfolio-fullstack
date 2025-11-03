@@ -1,23 +1,23 @@
-import { verifyToken } from '../utils/jwt.js';
+import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
 
 // Check if user is logged in (has valid token)
 export const authenticate = async (req, res, next) => {
     try {
-        // Get token from headers
-        const authHeader = req.headers.authorization;
+        const authHeader = req.header('Authorization');
 
         if (!authHeader || !authHeader.startsWith('Bearer ')) {
-            return res.status(401).json({
-                message: 'Access denied. No token provided.'
-            });
+            return res.status(401).json({ message: 'No token, authorization denied' });
         }
 
-        // Extract token (remove 'Bearer ' from the start)
-        const token = authHeader.substring(7);
+        const token = authHeader.split(' ')[1]; // Correct: extracts token after "Bearer "
 
-        // Verify token
-        const decoded = verifyToken(token);
+        if (!token) {
+            return res.status(401).json({ message: 'No token, authorization denied' });
+        }
+
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        req.user = decoded;
 
         // Find user in database
         const user = await User.findById(decoded.userId).select('-password');
@@ -31,10 +31,8 @@ export const authenticate = async (req, res, next) => {
         req.user = user;
         next(); // Continue to the next function
     } catch (error) {
-        res.status(401).json({
-            message: 'Invalid token.',
-            error: error.message
-        });
+        console.error('Auth middleware error:', error);
+        res.status(401).json({ message: 'Token is not valid' });
     }
 };
 

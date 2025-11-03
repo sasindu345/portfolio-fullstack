@@ -38,7 +38,8 @@ const Login = () => {
         const result = await login(formData.email, formData.password);
 
         if (result.success) {
-            navigate('/admin');
+            console.log('Login successful, navigating to /admin');
+            navigate('/admin', { replace: true });
         } else {
             setError(result.error || 'Login failed');
         }

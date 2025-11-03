@@ -18,36 +18,23 @@ const api = axios.create({
 });
 
 // Request interceptor to add auth token
-api.interceptors.request.use(
-    (config) => {
-        // Get token from localStorage if it exists
-        const token = localStorage.getItem('authToken');
-        if (token) {
-            config.headers.Authorization = `Bearer ${token}`;
-        }
-        return config;
-    },
-    (error) => {
-        return Promise.reject(error);
+api.interceptors.request.use((config) => {
+    const token = localStorage.getItem('authToken');
+    if (token && token !== 'undefined' && token !== 'null') {
+        config.headers.Authorization = `Bearer ${token}`;
     }
-);
+    return config;
+});
 
 // Response interceptor to handle errors
 api.interceptors.response.use(
-    (response) => {
-        return response;
-    },
+    (response) => response,
     (error) => {
-        // Handle common errors
-        if (error.response?.status === 401) {
-            // Unauthorized - remove token and redirect to login
+        if (error.response && error.response.status === 401) {
             localStorage.removeItem('authToken');
-            window.location.href = '/login';
+            localStorage.removeItem('userData');
+            window.location.href = '/admin/login'; // Changed from '/login'
         }
-
-        // Log error for debugging
-        console.error('API Error:', error.response?.data || error.message);
-
         return Promise.reject(error);
     }
 );

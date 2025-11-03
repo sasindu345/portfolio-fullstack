@@ -1,28 +1,13 @@
 // src/components/ProtectedRoute.js
-import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React from 'react';
+import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
-const ProtectedRoute = ({ children }) => {
+const ProtectedRoute = () => {
     const { user, loading } = useAuth();
-    const navigate = useNavigate();
+    const location = useLocation();
 
     console.log('ProtectedRoute - Loading:', loading, 'User:', !!user);
-
-    // Check authentication and redirect if needed
-    useEffect(() => {
-        if (!loading) {
-            const token = localStorage.getItem('authToken');
-            const isAuthenticated = user !== null && token !== null;
-
-            console.log('ProtectedRoute useEffect - Check:', { user: !!user, token: !!token, isAuthenticated });
-
-            if (!isAuthenticated) {
-                console.log('Not authenticated, navigating to login');
-                navigate('/admin/login', { replace: true });
-            }
-        }
-    }, [user, loading, navigate]);
 
     // Show loading while checking authentication
     if (loading) {
@@ -67,15 +52,7 @@ const ProtectedRoute = ({ children }) => {
 
     console.log('ProtectedRoute - Final render check:', { user: !!user, token: !!token, isAuthenticated });
 
-    // If not authenticated, show nothing (redirect will happen via useEffect)
-    if (!isAuthenticated) {
-        console.log('Rendering nothing, redirect should happen');
-        return null;
-    }
-
-    console.log('Authenticated, showing admin content');
-    // If authenticated, show the protected content
-    return children;
+    return isAuthenticated ? <Outlet /> : <Navigate to="/admin/login" state={{ from: location }} replace />;
 };
 
 export default ProtectedRoute;

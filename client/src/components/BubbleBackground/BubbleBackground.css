@@ -1,0 +1,30 @@
+/* src/components/BubbleBackground/BubbleBackground.css */
+
+/* Interactive Canvas Background */
+.interactive-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 2;
+    display: block;
+    pointer-events: none;
+}
+
+/* Make sure all content is above canvas */
+header,
+nav,
+main,
+section,
+footer,
+.hero,
+.about,
+.tech-stack,
+.projects,
+.contact,
+.contact-page,
+.admin-page {
+    position: relative;
+    z-index: 1;
+}

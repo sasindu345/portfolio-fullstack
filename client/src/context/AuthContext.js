@@ -25,9 +25,13 @@ export const AuthProvider = ({ children }) => {
             const token = localStorage.getItem('authToken');
             const userData = localStorage.getItem('userData');
 
-            console.log('Checking auth status - Token:', !!token, 'UserData:', !!userData);
+            // Treat "undefined", "null", empty strings as invalid
+            const validToken = token && token !== 'undefined' && token !== 'null' && token.trim() !== '';
+            const validUserData = userData && userData !== 'undefined' && userData !== 'null';
 
-            if (token && userData) {
+            console.log('Checking auth status - Token:', !!validToken, 'UserData:', !!validUserData);
+
+            if (validToken && validUserData) {
                 const parsedUser = JSON.parse(userData);
                 console.log('User found:', parsedUser);
                 setUser(parsedUser);
@@ -37,7 +41,6 @@ export const AuthProvider = ({ children }) => {
             }
         } catch (error) {
             console.error('Error checking auth status:', error);
-            // Clear invalid data
             localStorage.removeItem('authToken');
             localStorage.removeItem('userData');
             setUser(null);
@@ -48,7 +51,6 @@ export const AuthProvider = ({ children }) => {
 
     const login = async (email, password) => {
         try {
-            // Replace with your actual login API endpoint
             const response = await fetch('http://localhost:5001/api/auth/login', {
                 method: 'POST',
                 headers: {
@@ -58,16 +60,38 @@ export const AuthProvider = ({ children }) => {
             });
 
             const data = await response.json();
+            console.log('Login response:', data); // Debug log
 
             if (!response.ok) {
                 throw new Error(data.message || 'Login failed');
             }
 
-            // Store token and user data
-            localStorage.setItem('authToken', data.token);
-            localStorage.setItem('userData', JSON.stringify(data.user));
+            // Handle different token field names from API
+            const token = data.token || data.accessToken || data.authToken || data.jwt;
+            const userPayload = data.user || data.admin || data.data?.user;
 
-            setUser(data.user);
+            console.log('Extracted token:', !!token, 'User:', !!userPayload); // Debug log
+
+            if (!token) {
+                console.error('Server response:', data);
+                throw new Error('No token returned from server');
+            }
+
+            // Store token FIRST
+            localStorage.setItem('authToken', token);
+            console.log('Token saved to localStorage:', localStorage.getItem('authToken')); // Debug log
+
+            if (userPayload) {
+                localStorage.setItem('userData', JSON.stringify(userPayload));
+                setUser(userPayload);
+            } else {
+                // Fallback: create minimal user object
+                const minimalUser = { role: 'admin', email };
+                localStorage.setItem('userData', JSON.stringify(minimalUser));
+                setUser(minimalUser);
+            }
+
+            console.log('Login successful - Token stored:', !!localStorage.getItem('authToken'));
             return { success: true };
 
         } catch (error) {
@@ -84,9 +108,10 @@ export const AuthProvider = ({ children }) => {
 
     const isAuthenticated = () => {
         const token = localStorage.getItem('authToken');
+        const validToken = token && token !== 'undefined' && token !== 'null' && token.trim() !== '';
         const hasUser = user !== null;
-        console.log('isAuthenticated check - Token:', !!token, 'User:', !!hasUser);
-        return hasUser && token;
+        console.log('isAuthenticated check - Token:', !!validToken, 'User:', !!hasUser);
+        return Boolean(hasUser && validToken);
     };
 
     const isAdmin = () => {

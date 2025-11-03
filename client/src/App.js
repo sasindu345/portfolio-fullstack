@@ -1,3 +1,4 @@
+import React from 'react';
 import './App.css';
 import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
@@ -9,33 +10,40 @@ import Project from './Pages/Project/Project';
 import Login from './Pages/Login/Login';
 import { AuthProvider } from './context/AuthContext';
 import Admin from './Pages/Admin/Admin';
-import ProtectedRoute from './components/ProtectedRoute';
+
+import { ThemeProvider } from './context/ThemeContext';
+import ThemeToggle from './components/ThemeToggle/ThemeToggle';
+import BubbleBackground from './components/BubbleBackground/BubbleBackground';
+import './styles/theme.css';
 
 function App() {
   return (
     <Router>
-      <AuthProvider>
-        <Header />
+      <ThemeProvider>
+        <AuthProvider>
+          <Routes>
+            {/* Admin routes - NO Header/Footer */}
+            <Route path="/admin/login" element={<Login />} />
+            <Route path="/admin" element={<Admin />} />
 
-        <Routes>
-          {/* Public routes */}
-          <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
-          <Route path='/contact' element={<Contact />} />
-          <Route path="/projects" element={<Project />} />
-
-          {/* Admin routes - hidden from public */}
-          <Route path="/admin/login" element={<Login />} />
-          <Route path="/admin" element={
-            <ProtectedRoute>
-              <Admin />
-            </ProtectedRoute>
-          } />
-
-        </Routes>
-
-        <Footer />
-      </AuthProvider>
+            {/* Public routes - WITH Header/Footer */}
+            <Route path="/*" element={
+              <>
+                <BubbleBackground />
+                <Header />
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/about" element={<About />} />
+                  <Route path='/contact' element={<Contact />} />
+                  <Route path="/projects" element={<Project />} />
+                </Routes>
+                <Footer />
+                <ThemeToggle />
+              </>
+            } />
+          </Routes>
+        </AuthProvider>
+      </ThemeProvider>
     </Router>
   );
 }

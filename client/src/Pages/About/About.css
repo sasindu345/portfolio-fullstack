@@ -1,6 +1,4 @@
-/* src/pages/About/About.css */
-
-/* --- Root Variables for Consistency (Matching Contact/Project Theme) --- */
+/* About Section Variables */
 :root {
     --primary-dark: #0a0f1c;
     --secondary-dark: #1a2332;
@@ -14,11 +12,10 @@
     --glass-border: rgba(148, 163, 184, 0.1);
 }
 
-/* --- About Section Container --- */
+/* About Section - Mobile First */
 .about {
-    padding: 100px 0;
-    /* Apply the dark background theme */
-    background: linear-gradient(135deg, var(--primary-dark) 0%, var(--secondary-dark) 50%, #0f172a 100%);
+    padding: 80px 0;
+    background: var(--gradient-primary);
     min-height: 100vh;
     color: var(--text-primary);
     position: relative;
@@ -28,7 +25,7 @@
 .about-container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 2rem;
+    padding: 0 1rem;
     position: relative;
     z-index: 1;
 }
@@ -36,17 +33,24 @@
 /* Header */
 .about-header {
     text-align: center;
-    margin-bottom: 4rem;
-    animation: fadeInUp 0.8s ease-out;
+    margin-bottom: 3rem;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s ease;
+}
+
+.about-header.animate-in {
+    opacity: 1;
+    transform: translateY(0);
 }
 
 .about-title {
-    font-size: 2.5rem;
+    font-size: 2rem;
     font-weight: 800;
     margin-bottom: 0.5rem;
     position: relative;
-    /* Gradient Text */
-    background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-cyan) 50%, var(--accent-light-blue) 100%);
+    display: inline-block;
+    background: var(--gradient-accent);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -60,52 +64,58 @@
     transform: translateX(-50%);
     width: 60px;
     height: 3px;
-    background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-cyan) 100%);
+    background: var(--gradient-accent);
     border-radius: 2px;
 }
 
 .about-subtitle {
-    font-size: 1.1rem;
+    font-size: 1rem;
     color: var(--text-secondary);
-    margin-top: 1rem;
+    margin-top: 1.5rem;
 }
 
-/* Main Content Layout */
+/* Content Layout - Mobile First */
 .about-content {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 4rem;
-    margin-bottom: 4rem;
-    align-items: start;
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+    margin-bottom: 3rem;
 }
 
 /* Left Side - Text Content */
 .about-text {
-    animation: slideInLeft 0.8s ease-out;
+    opacity: 0;
+    transform: translateX(-30px);
+    transition: all 0.8s ease 0.2s;
+}
+
+.about-text.animate-in {
+    opacity: 1;
+    transform: translateX(0);
 }
 
 .about-intro h3 {
-    font-size: 1.6rem;
+    font-size: 1.4rem;
     color: var(--accent-light-blue);
     margin-bottom: 1rem;
     font-weight: 700;
 }
 
 .about-intro p {
-    font-size: 1.05rem;
+    font-size: 1rem;
     line-height: 1.7;
     color: var(--text-secondary);
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.25rem;
 }
 
-/* Personal Details (Glassmorphism Card) */
+/* Personal Details Card */
 .about-details {
     background: var(--glass-bg);
     backdrop-filter: blur(15px);
     border: 1px solid var(--glass-border);
-    padding: 2rem;
-    border-radius: 20px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    padding: 1.5rem;
+    border-radius: 16px;
+    box-shadow: var(--shadow-md);
     margin: 2rem 0;
 }
 
@@ -113,8 +123,9 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.85rem 0;
+    padding: 0.75rem 0;
     border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+    gap: 1rem;
 }
 
 .detail-item:last-child {
@@ -124,32 +135,68 @@
 .detail-label {
     font-weight: 600;
     color: var(--text-primary);
-    font-size: 0.95rem;
+    font-size: 0.9rem;
+    white-space: nowrap;
 }
 
 .detail-value {
     color: var(--text-secondary);
-    font-size: 0.95rem;
+    font-size: 0.9rem;
+    text-align: right;
+    word-break: break-word;
 }
 
-/* Download Button */
+/* Download Button - Fixed Mobile */
 .about-actions {
-    margin-top: 2.5rem;
+    margin-top: 2rem;
+    display: flex;
+    justify-content: center;
 }
 
 .btn-download {
-    display: inline-block;
-    padding: 1rem 2rem;
-    background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-cyan) 100%);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 1rem 1.5rem;
+    background: var(--gradient-accent);
     color: white;
     text-decoration: none;
-    border-radius: 50px;
+    border-radius: 10px;
     font-weight: 600;
-    font-size: 1rem;
+    font-size: 0.9rem;
     transition: all 0.3s ease;
     box-shadow: 0 5px 15px rgba(59, 130, 246, 0.3);
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    width: 100%;
+    max-width: 300px;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-download::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.btn-download:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+.btn-download svg,
+.btn-download span {
+    position: relative;
+    z-index: 1;
 }
 
 .btn-download:hover {
@@ -157,30 +204,41 @@
     box-shadow: 0 8px 25px rgba(59, 130, 246, 0.5);
 }
 
+.btn-download:active {
+    transform: translateY(-1px);
+}
+
 /* Right Side */
 .about-right {
-    animation: slideInRight 0.8s ease-out;
+    opacity: 0;
+    transform: translateX(30px);
+    transition: all 0.8s ease 0.4s;
+}
+
+.about-right.animate-in {
+    opacity: 1;
+    transform: translateX(0);
 }
 
 /* About Image */
 .about-image {
     position: relative;
-    margin-bottom: 2.5rem;
-    border-radius: 20px;
+    margin-bottom: 2rem;
+    border-radius: 16px;
     overflow: hidden;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    box-shadow: var(--shadow-lg);
     border: 2px solid var(--glass-border);
 }
 
 .about-image img {
     width: 100%;
-    height: 400px;
+    height: 300px;
     object-fit: cover;
     transition: transform 0.4s ease;
 }
 
 .about-image:hover img {
-    transform: scale(1.03);
+    transform: scale(1.05);
 }
 
 .image-overlay {
@@ -193,18 +251,18 @@
     pointer-events: none;
 }
 
-/* Skills Section (Glassmorphism Card) */
+/* Skills Card */
 .about-skills {
     background: var(--glass-bg);
     backdrop-filter: blur(15px);
     border: 1px solid var(--glass-border);
-    padding: 2rem;
-    border-radius: 20px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    padding: 1.5rem;
+    border-radius: 16px;
+    box-shadow: var(--shadow-md);
 }
 
 .about-skills h4 {
-    font-size: 1.4rem;
+    font-size: 1.3rem;
     color: var(--accent-light-blue);
     margin-bottom: 1.5rem;
     font-weight: 700;
@@ -221,123 +279,119 @@
     flex-direction: column;
 }
 
+.skill-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
 .skill-name {
     font-weight: 600;
     color: var(--text-primary);
-    margin-bottom: 0.5rem;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
+}
+
+.skill-percent {
+    font-weight: 600;
+    color: var(--accent-light-blue);
+    font-size: 0.85rem;
 }
 
 .skill-bar {
     width: 100%;
-    height: 10px;
-    background: rgba(148, 163, 184, 0.1);
+    height: 8px;
+    background: rgba(148, 163, 184, 0.15);
     border-radius: 10px;
     overflow: hidden;
 }
 
 .skill-progress {
     height: 100%;
-    background: linear-gradient(90deg, var(--accent-blue) 0%, var(--accent-cyan) 100%);
+    width: 0;
+    background: var(--gradient-accent);
     border-radius: 10px;
-    transition: width 1.5s ease-in-out;
+    animation: fillSkill 1.5s ease-out forwards;
+    position: relative;
 }
 
-/* Note: The 'fillSkill' animation logic needs to be handled via JavaScript
-   for dynamic values, or you can use CSS variables like this: */
+.skill-progress::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    animation: shimmer 2s infinite;
+}
 
-/* Example: Setting CSS variable for animation */
 @keyframes fillSkill {
-    from {
-        width: 0%;
+    to {
+        width: var(--skill-level);
+    }
+}
+
+@keyframes shimmer {
+    0% {
+        transform: translateX(-100%);
     }
 
-    /* Percentage is handled by the inline style/data attribute */
+    100% {
+        transform: translateX(100%);
+    }
 }
 
-.skill-progress {
-    animation: fillSkill 1.5s ease-in-out forwards;
-}
-
-/* Skill Progress Widths (For Initial Load/Fallback) */
-.skill-progress[data-percent]::before {
-    content: attr(data-percent) '%';
-    position: absolute;
-    right: 0;
-    top: -20px;
-    font-size: 0.8rem;
-    color: var(--text-secondary);
-}
-
-.skill-progress[data-percent="95"] {
-    width: 95%;
-}
-
-.skill-progress[data-percent="90"] {
-    width: 90%;
-}
-
-.skill-progress[data-percent="88"] {
-    width: 88%;
-}
-
-.skill-progress[data-percent="85"] {
-    width: 85%;
-}
-
-.skill-progress[data-percent="80"] {
-    width: 80%;
-}
-
-
-/* Stats Section (Glassmorphism Card) */
+/* Stats Section */
 .about-stats {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 2rem;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
     background: var(--glass-bg);
     backdrop-filter: blur(15px);
     border: 1px solid var(--glass-border);
-    padding: 3rem 2rem;
-    border-radius: 20px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-    animation: fadeInUp 0.8s ease-out 0.3s both;
+    padding: 2rem 1rem;
+    border-radius: 16px;
+    box-shadow: var(--shadow-md);
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s ease 0.6s;
+}
+
+.about-stats.animate-in {
+    opacity: 1;
+    transform: translateY(0);
 }
 
 .stat-item {
     text-align: center;
     padding: 1rem;
-    border-right: 1px solid var(--glass-border);
-}
-
-.stat-item:last-child {
-    border-right: none;
 }
 
 .stat-item h3 {
-    font-size: 2.8rem;
+    font-size: 2.2rem;
     font-weight: 800;
-    color: var(--accent-blue);
     margin-bottom: 0.25rem;
-    background: linear-gradient(135deg, var(--accent-light-blue), var(--accent-cyan));
+    background: var(--gradient-accent);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    animation: countUp 1.5s ease-out;
 }
 
 .stat-item p {
-    font-size: 0.95rem;
+    font-size: 0.85rem;
     color: var(--text-secondary);
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    line-height: 1.4;
 }
 
-/* Animations */
-@keyframes fadeInUp {
+@keyframes countUp {
     from {
         opacity: 0;
-        transform: translateY(30px);
+        transform: translateY(20px);
     }
 
     to {
@@ -346,129 +400,190 @@
     }
 }
 
-@keyframes slideInLeft {
-    from {
-        opacity: 0;
-        transform: translateX(-50px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
-
-@keyframes slideInRight {
-    from {
-        opacity: 0;
-        transform: translateX(50px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
-
-/* Responsive Design */
-@media (max-width: 992px) {
-    .about-content {
-        grid-template-columns: 1fr;
-        gap: 3rem;
-    }
-
-    .about-right {
-        /* On smaller screens, put the image above skills */
-        display: flex;
-        flex-direction: column;
-    }
-
-    .about-image {
-        order: -1;
-        /* Move image above skills */
-    }
-}
-
-@media (max-width: 768px) {
+/* Tablet */
+@media (min-width: 576px) {
     .about {
-        padding: 80px 0;
+        padding: 100px 0;
     }
 
     .about-container {
-        padding: 0 1rem;
+        padding: 0 2rem;
     }
 
     .about-title {
-        font-size: 2rem;
+        font-size: 2.3rem;
     }
 
-    .about-stats {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 1.5rem;
-        padding: 2rem 1rem;
-    }
-
-    .stat-item {
-        border-right: none;
-        border-bottom: 1px solid var(--glass-border);
-    }
-
-    .stat-item:nth-child(2) {
-        border-bottom: 1px solid var(--glass-border);
-    }
-
-    .stat-item:nth-child(odd) {
-        border-right: 1px solid var(--glass-border);
-    }
-
-    .stat-item:last-child {
-        border-bottom: none;
-        border-right: none;
-    }
-
-    .about-image img {
-        height: 300px;
-    }
-}
-
-@media (max-width: 480px) {
-    .about-title {
-        font-size: 1.8rem;
+    .about-subtitle {
+        font-size: 1.05rem;
     }
 
     .about-intro h3 {
-        font-size: 1.4rem;
+        font-size: 1.5rem;
     }
 
     .about-intro p {
-        font-size: 1rem;
+        font-size: 1.05rem;
     }
 
-    .about-stats {
-        grid-template-columns: 1fr;
-        gap: 1rem;
+    .about-details {
+        padding: 2rem;
     }
 
-    .stat-item {
-        border-right: none !important;
-        border-bottom: 1px solid var(--glass-border);
+    .detail-label,
+    .detail-value {
+        font-size: 0.95rem;
     }
 
-    .stat-item:last-child {
-        border-bottom: none;
+    .btn-download {
+        width: 100%;
+        max-width: 320px;
+        padding: 1rem 2rem;
+        font-size: 0.95rem;
+    }
+
+    .about-image img {
+        height: 350px;
+    }
+
+    .about-skills {
+        padding: 2rem;
+    }
+
+    .about-skills h4 {
+        font-size: 1.4rem;
+    }
+
+    .skill-name {
+        font-size: 0.95rem;
     }
 
     .stat-item h3 {
         font-size: 2.5rem;
     }
 
-    .about-skills,
-    .about-details {
-        padding: 1.5rem;
+    .stat-item p {
+        font-size: 0.9rem;
+    }
+}
+
+/* Desktop */
+@media (min-width: 768px) {
+    .about-content {
+        flex-direction: row;
+        gap: 3rem;
+    }
+
+    .about-text {
+        flex: 1;
+    }
+
+    .about-right {
+        flex: 1;
+    }
+
+    .about-actions {
+        justify-content: flex-start;
     }
 
     .btn-download {
-        width: 100%;
-        text-align: center;
+        width: auto;
+        max-width: none;
+    }
+
+    .about-image img {
+        height: 400px;
+    }
+
+    .about-stats {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 2rem;
+        padding: 3rem 2rem;
+    }
+
+    .stat-item {
+        border-right: 1px solid var(--glass-border);
+    }
+
+    .stat-item:last-child {
+        border-right: none;
+    }
+
+    .stat-item h3 {
+        font-size: 2.8rem;
+    }
+
+    .stat-item p {
+        font-size: 0.95rem;
+    }
+}
+
+/* Large Desktop */
+@media (min-width: 1024px) {
+    .about-title {
+        font-size: 2.5rem;
+    }
+
+    .about-subtitle {
+        font-size: 1.1rem;
+    }
+
+    .about-content {
+        gap: 4rem;
+    }
+
+    .about-intro h3 {
+        font-size: 1.6rem;
+    }
+
+    .about-intro p {
+        font-size: 1.1rem;
+    }
+
+    .btn-download {
+        padding: 1.1rem 3rem;
+    }
+}
+
+/* Extra Small Mobile */
+@media (max-width: 380px) {
+    .about {
+        padding: 60px 0;
+    }
+
+    .about-title {
+        font-size: 1.75rem;
+    }
+
+    .about-intro h3 {
+        font-size: 1.25rem;
+    }
+
+    .about-intro p {
+        font-size: 0.95rem;
+    }
+
+    .detail-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.25rem;
+    }
+
+    .detail-value {
+        text-align: left;
+    }
+
+    .btn-download {
+        padding: 0.85rem 1.25rem;
+        font-size: 0.85rem;
+        max-width: 260px;
+    }
+
+    .stat-item h3 {
+        font-size: 2rem;
+    }
+
+    .stat-item p {
+        font-size: 0.8rem;
     }
 }

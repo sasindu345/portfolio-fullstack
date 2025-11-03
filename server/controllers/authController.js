@@ -1,11 +1,20 @@
 import bcrypt from 'bcryptjs';
-import User from '../models/User.js';
 import { generateToken } from '../utils/jwt.js';
+import User from '../models/User.js';
 
 // Register new user
 export const register = async (req, res) => {
     try {
-        const { username, email, password, firstName, lastName } = req.body;
+        const { username, email, password, firstName, lastName, role, adminSecret } = req.body;
+
+        // If trying to register as admin, require the static secret password
+        if (role === 'admin') {
+            if (!adminSecret || adminSecret !== process.env.ADMIN_REGISTRATION_SECRET) {
+                return res.status(403).json({
+                    message: 'Invalid admin registration secret. Access denied.'
+                });
+            }
+        }
 
         // Check if user already exists
         const existingUser = await User.findOne({
@@ -24,7 +33,7 @@ export const register = async (req, res) => {
             email,
             password,
             profile: { firstName, lastName },
-            role: req.body.role || 'user'  // ensures admins can be created
+            role: role || 'user'
         });
 
         await user.save();
@@ -58,40 +67,28 @@ export const login = async (req, res) => {
     try {
         const { email, password } = req.body;
 
-        console.log('Login attempt:', { email, password: '***' }); // Debug log
-
-        // Find user by email
-        const user = await User.findOne({ email });
-        if (!user) {
-            console.log('User not found for email:', email); // Debug log
-            return res.status(401).json({
-                message: 'Invalid email or password'
-            });
+        // Validate input
+        if (!email || !password) {
+            return res.status(400).json({ message: 'Please provide email and password' });
         }
 
-        console.log('User found:', user.username); // Debug log
-        console.log('Password from DB exists:', !!user.password); // Debug log
+        // Find user
+        const user = await User.findOne({ email }).select('+password');
+        if (!user) {
+            return res.status(401).json({ message: 'Invalid credentials' });
+        }
 
         // Check password
-        const isPasswordValid = await user.comparePassword(password);
-        console.log('Password valid:', isPasswordValid); // Debug log
-
-        if (!isPasswordValid) {
-            return res.status(401).json({
-                message: 'Invalid email or password'
-            });
+        const isMatch = await user.comparePassword(password);
+        if (!isMatch) {
+            return res.status(401).json({ message: 'Invalid credentials' });
         }
 
-        // Update last login
-        user.lastLogin = new Date();
-        await user.save();
-
-        // Generate token
+        // Generate token using the utility function
         const token = generateToken(user._id, user.role);
 
-        // Send response
+        // Return token and user (without password)
         res.json({
-            message: 'Login successful',
             token,
             user: {
                 id: user._id,
@@ -101,11 +98,10 @@ export const login = async (req, res) => {
                 profile: user.profile
             }
         });
-
     } catch (error) {
-        console.log('Login error:', error); // Debug log
+        console.error('Login error:', error);
         res.status(500).json({
-            message: 'Login failed',
+            message: 'Server error',
             error: error.message
         });
     }
@@ -154,3 +150,4 @@ export const updateProfile = async (req, res) => {
         });
     }
 };
+
