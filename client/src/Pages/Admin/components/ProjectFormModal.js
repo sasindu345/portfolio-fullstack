@@ -1,10 +1,12 @@
 // src/Pages/Admin/components/ProjectFormModal.js
 import React from 'react';
+import { createPortal } from 'react-dom';
 
 const ProjectFormModal = ({
     projectForm,
     editingProject,
     loading,
+    error,
     onClose,
     onSubmit,
     onChange,
@@ -21,7 +23,7 @@ const ProjectFormModal = ({
         return img.preview;
     };
 
-    return (
+    return createPortal(
         <div className="modal-overlay">
             <div className="modal">
                 <div className="modal-header">
@@ -30,6 +32,11 @@ const ProjectFormModal = ({
                 </div>
 
                 <form onSubmit={onSubmit} className="project-form" noValidate>
+                    {error && error.field === 'general' && (
+                        <div style={{ color: '#e74c3c', marginBottom: '1rem', fontWeight: '500' }}>
+                            {error.message}
+                        </div>
+                    )}
                     <div className="form-group">
                         <label htmlFor="title">Project Title *</label>
                         <input
@@ -42,6 +49,9 @@ const ProjectFormModal = ({
                             placeholder="My Awesome Project"
                             autoComplete="off"
                         />
+                        {error && error.field === 'title' && (
+                            <small style={{ color: '#e74c3c' }}>❌ {error.message}</small>
+                        )}
                     </div>
 
                     <div className="form-group">
@@ -60,6 +70,9 @@ const ProjectFormModal = ({
                         <small style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>
                             {projectForm.shortDescription.length}/200 characters
                         </small>
+                        {error && error.field === 'shortDescription' && (
+                            <small style={{ color: '#e74c3c' }}>❌ {error.message}</small>
+                        )}
                     </div>
 
                     <div className="form-group">
@@ -78,6 +91,9 @@ const ProjectFormModal = ({
                         <small style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>
                             {projectForm.description.length}/2000 characters
                         </small>
+                        {error && error.field === 'description' && (
+                            <small style={{ color: '#e74c3c' }}>❌ {error.message}</small>
+                        )}
                     </div>
 
                     <div className="form-row">
@@ -110,6 +126,9 @@ const ProjectFormModal = ({
                                 placeholder="React, Node.js, MongoDB"
                                 autoComplete="off"
                             />
+                            {error && error.field === 'technologies' && (
+                                <small style={{ color: '#e74c3c' }}>❌ {error.message}</small>
+                            )}
                         </div>
                     </div>
 
@@ -320,7 +339,8 @@ const ProjectFormModal = ({
                     </div>
                 </form>
             </div>
-        </div>
+        </div>,
+        document.body
     );
 };
 

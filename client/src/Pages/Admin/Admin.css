@@ -53,7 +53,7 @@
     z-index: 0;
 }
 
-/* Header - FIXED */
+/* Header - LOWER Z-INDEX */
 .admin-header {
     background: rgba(15, 23, 42, 0.95);
     backdrop-filter: blur(20px);
@@ -62,12 +62,18 @@
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
     position: sticky;
     top: 0;
-    z-index: 100;
+    z-index: 10;
+    transition: filter 0.3s ease;
 }
 
 [data-theme="light"] .admin-header {
     background: rgba(255, 255, 255, 0.95);
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Blur header when modal is open */
+.admin-header.blur-background {
+    filter: blur(8px);
 }
 
 .admin-header-content {
@@ -123,7 +129,7 @@
     background: linear-gradient(135deg, #dc2626, #b91c1c);
 }
 
-/* Navigation - FIXED */
+/* Navigation - LOWER Z-INDEX THAN MODAL */
 .admin-nav {
     background: rgba(15, 23, 42, 0.9);
     backdrop-filter: blur(20px);
@@ -135,11 +141,17 @@
     gap: 0;
     position: sticky;
     top: 73px;
-    z-index: 99;
+    z-index: 9;
+    transition: filter 0.3s ease;
 }
 
 [data-theme="light"] .admin-nav {
     background: rgba(255, 255, 255, 0.9);
+}
+
+/* Blur navbar when modal is open */
+.admin-nav.blur-background {
+    filter: blur(8px);
 }
 
 .nav-btn {
@@ -173,6 +185,12 @@
     padding: 2rem;
     position: relative;
     z-index: 1;
+    transition: filter 0.3s ease;
+}
+
+/* Blur main content when modal is open */
+.admin-main.blur-background {
+    filter: blur(8px);
 }
 
 /* Alerts */
@@ -396,7 +414,12 @@
     font-weight: 600;
 }
 
-/* Modal Overlay - HIGHEST Z-INDEX FIXED */
+/* Lock body scroll when modal is open */
+body.modal-open {
+    overflow: hidden;
+}
+
+/* Modal Overlay - HIGHEST Z-INDEX */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -404,19 +427,32 @@
     right: 0;
     bottom: 0;
     background: rgba(10, 15, 28, 0.85);
-    backdrop-filter: blur(8px);
+    backdrop-filter: blur(12px);
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 999999;
+    z-index: 10000;
     padding: 1rem;
     overflow-y: auto;
+    animation: fadeIn 0.3s ease;
 }
 
 [data-theme="light"] .modal-overlay {
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(12px);
 }
 
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* Modal Container - NO BLUR */
 .modal {
     background: var(--card-dark);
     border-radius: 24px;
@@ -428,11 +464,26 @@
     border: 1px solid var(--glass-border);
     position: relative;
     margin: auto;
+    z-index: 10001;
+    animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    filter: none !important;
 }
 
 [data-theme="light"] .modal {
     background: #ffffff;
-    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(40px) scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
 }
 
 .modal::-webkit-scrollbar {
@@ -444,7 +495,7 @@
 }
 
 .modal::-webkit-scrollbar-thumb {
-    background: rgba(100, 255, 218, 0.3);
+    background: rgba(59, 130, 246, 0.5);
     border-radius: 4px;
 }
 
@@ -465,7 +516,7 @@
     position: sticky;
     top: 0;
     background: var(--card-dark);
-    z-index: 1;
+    z-index: 10;
 }
 
 [data-theme="light"] .modal-header {
@@ -874,9 +925,101 @@
     font-weight: 600;
 }
 
-/* Lock body scroll when modal is open */
-body.modal-open {
-    overflow: hidden;
+/* Theme Toggle Button */
+.theme-toggle-btn {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.theme-toggle-btn:hover {
+    transform: scale(1.1) rotate(15deg);
+    background: rgba(59, 130, 246, 0.2);
+}
+
+/* Modal Content */
+.modal-content {
+    background: var(--card-dark);
+    border-radius: 24px;
+    width: 100%;
+    max-width: 700px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+    border: 1px solid var(--glass-border);
+    position: relative;
+    margin: auto;
+    z-index: 10001;
+}
+
+[data-theme="light"] .modal-content {
+    background: #ffffff;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+}
+
+.modal-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.modal-content::-webkit-scrollbar-track {
+    background: rgba(15, 23, 42, 0.5);
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+    background: rgba(59, 130, 246, 0.5);
+    border-radius: 4px;
+}
+
+[data-theme="light"] .modal-content::-webkit-scrollbar-track {
+    background: #f1f5f9;
+}
+
+[data-theme="light"] .modal-content::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+}
+
+.modal-close {
+    background: rgba(15, 23, 42, 0.8);
+    border: 1px solid var(--glass-border);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 1.5rem;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+[data-theme="light"] .modal-close {
+    background: rgba(241, 245, 249, 0.8);
+}
+
+.modal-close:hover {
+    background: rgba(239, 68, 68, 0.2);
+    color: #fca5a5;
+    transform: rotate(90deg);
+}
+
+[data-theme="light"] .modal-close:hover {
+    background: rgba(239, 68, 68, 0.1);
+    color: #dc2626;
+}
+
+.modal-body {
+    padding: 2rem;
 }
 
 /* Responsive Design */
@@ -968,6 +1111,12 @@ body.modal-open {
     .project-form {
         padding: 1.5rem;
     }
+
+    .theme-toggle-btn {
+        width: 36px;
+        height: 36px;
+        font-size: 1rem;
+    }
 }
 
 @media (max-width: 480px) {
@@ -1017,170 +1166,6 @@ body.modal-open {
         flex-direction: column;
     }
 
-}
-
-/* Add these styles to your existing Admin.css - APPEND TO END */
-
-/* Theme Toggle Button */
-.theme-toggle-btn {
-    background: var(--glass-bg);
-    border: 1px solid var(--glass-border);
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    font-size: 1.2rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    backdrop-filter: blur(10px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.theme-toggle-btn:hover {
-    transform: scale(1.1) rotate(15deg);
-    background: rgba(59, 130, 246, 0.2);
-}
-
-/* Modal Overlay - MAXIMUM Z-INDEX */
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(10, 15, 28, 0.90);
-    backdrop-filter: blur(10px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 999999 !important;
-    padding: 1rem;
-    overflow-y: auto;
-}
-
-[data-theme="light"] .modal-overlay {
-    background: rgba(0, 0, 0, 0.60);
-}
-
-.modal-content {
-    background: var(--card-dark);
-    border-radius: 24px;
-    width: 100%;
-    max-width: 700px;
-    max-height: 90vh;
-    overflow-y: auto;
-    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
-    border: 1px solid var(--glass-border);
-    position: relative;
-    margin: auto;
-    z-index: 1000000 !important;
-}
-
-[data-theme="light"] .modal-content {
-    background: #ffffff;
-    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
-}
-
-.modal-content::-webkit-scrollbar {
-    width: 8px;
-}
-
-.modal-content::-webkit-scrollbar-track {
-    background: rgba(15, 23, 42, 0.5);
-}
-
-.modal-content::-webkit-scrollbar-thumb {
-    background: rgba(59, 130, 246, 0.5);
-    border-radius: 4px;
-}
-
-[data-theme="light"] .modal-content::-webkit-scrollbar-track {
-    background: #f1f5f9;
-}
-
-[data-theme="light"] .modal-content::-webkit-scrollbar-thumb {
-    background: #cbd5e1;
-}
-
-.modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 2rem;
-    border-bottom: 1px solid var(--glass-border);
-    position: sticky;
-    top: 0;
-    background: var(--card-dark);
-    z-index: 10;
-}
-
-[data-theme="light"] .modal-header {
-    background: #ffffff;
-}
-
-.modal-header h2,
-.modal-header h3 {
-    margin: 0;
-    color: var(--text-primary);
-    font-size: 1.5rem;
-    font-weight: 800;
-}
-
-.modal-close {
-    background: rgba(15, 23, 42, 0.8);
-    border: 1px solid var(--glass-border);
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    font-size: 1.5rem;
-    color: var(--text-secondary);
-    cursor: pointer;
-    transition: all 0.3s ease;
-    backdrop-filter: blur(10px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-[data-theme="light"] .modal-close {
-    background: rgba(241, 245, 249, 0.8);
-}
-
-.modal-close:hover {
-    background: rgba(239, 68, 68, 0.2);
-    color: #fca5a5;
-    transform: rotate(90deg);
-}
-
-[data-theme="light"] .modal-close:hover {
-    background: rgba(239, 68, 68, 0.1);
-    color: #dc2626;
-}
-
-.modal-body {
-    padding: 2rem;
-}
-
-/* Update header z-index to be lower than modal */
-.admin-header {
-    z-index: 100 !important;
-}
-
-.admin-nav {
-    z-index: 99 !important;
-}
-
-/* Mobile responsive for theme toggle */
-@media (max-width: 768px) {
-    .theme-toggle-btn {
-        width: 36px;
-        height: 36px;
-        font-size: 1rem;
-    }
-}
-
-@media (max-width: 480px) {
     .theme-toggle-btn {
         width: 32px;
         height: 32px;

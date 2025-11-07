@@ -14,7 +14,7 @@ const Admin = () => {
     const { user, logout } = useAuth();
     const [activeTab, setActiveTab] = useState('dashboard');
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState('');
+    const [error, setError] = useState(null);
     const [success, setSuccess] = useState('');
 
     // Memoize initial state
@@ -169,7 +169,7 @@ const Admin = () => {
         e.stopPropagation();
 
         setLoading(true);
-        setError('');
+        setError(null);
 
         try {
             // Validate dates
@@ -177,7 +177,7 @@ const Admin = () => {
                 const startDate = new Date(projectForm.startDate);
                 const endDate = new Date(projectForm.endDate);
                 if (endDate <= startDate) {
-                    setError('End date must be after start date');
+                    setError({ field: 'endDate', message: 'End date must be after start date' });
                     setLoading(false);
                     return;
                 }
@@ -233,14 +233,24 @@ const Admin = () => {
             };
 
             // Validation
-            if (!projectData.title || !projectData.shortDescription || !projectData.description) {
-                setError('Please fill in all required fields');
+            if (!projectData.title) {
+                setError({ field: 'title', message: 'Title is required' });
+                setLoading(false);
+                return;
+            }
+            if (!projectData.shortDescription) {
+                setError({ field: 'shortDescription', message: 'Short description is required' });
+                setLoading(false);
+                return;
+            }
+            if (!projectData.description) {
+                setError({ field: 'description', message: 'Description is required' });
                 setLoading(false);
                 return;
             }
 
             if (projectData.technologies.length === 0) {
-                setError('Please add at least one technology');
+                setError({ field: 'technologies', message: 'At least one technology is required' });
                 setLoading(false);
                 return;
             }
@@ -263,7 +273,7 @@ const Admin = () => {
         } catch (error) {
             console.error('Submit error:', error);
             const errorMessage = error.response?.data?.message || error.message || 'An error occurred';
-            setError(`Failed to ${editingProject ? 'update' : 'create'} project: ${errorMessage}`);
+            setError({ field: 'submit', message: `Failed to ${editingProject ? 'update' : 'create'} project: ${errorMessage}` });
         } finally {
             setLoading(false);
         }
@@ -362,6 +372,38 @@ const Admin = () => {
         loadDashboardStats();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+    // ...existing code...
+
+    // Add this useEffect to handle blur when modal opens
+    useEffect(() => {
+        const header = document.querySelector('.admin-header');
+        const nav = document.querySelector('.admin-nav');
+        const main = document.querySelector('.admin-main');
+
+        if (showProjectForm) {
+            // Add blur when modal is open
+            header?.classList.add('blur-background');
+            nav?.classList.add('blur-background');
+            main?.classList.add('blur-background');
+            document.body.classList.add('modal-open');
+        } else {
+            // Remove blur when modal is closed
+            header?.classList.remove('blur-background');
+            nav?.classList.remove('blur-background');
+            main?.classList.remove('blur-background');
+            document.body.classList.remove('modal-open');
+        }
+
+        // Cleanup on unmount
+        return () => {
+            header?.classList.remove('blur-background');
+            nav?.classList.remove('blur-background');
+            main?.classList.remove('blur-background');
+            document.body.classList.remove('modal-open');
+        };
+    }, [showProjectForm]);
+
+    // ...existing code... 
 
     // Load data when tab changes - FIXED
     // Load data when tab changes - FIXED
@@ -428,23 +470,11 @@ const Admin = () => {
             </nav>
 
             {/* Messages */}
-            {error && <div className="alert alert-error">{error}</div>}
+            {error && !showProjectForm && <div className="alert alert-error">{error.message}</div>}
             {success && <div className="alert alert-success">{success}</div>}
 
             {/* Content */}
             <main className="admin-main">
-                {showProjectForm && (
-                    <ProjectFormModal
-                        projectForm={projectForm}
-                        editingProject={editingProject}
-                        loading={loading}
-                        onClose={resetProjectForm}
-                        onSubmit={handleProjectSubmit}
-                        onChange={handleProjectFormChange}
-                        onRemoveImage={handleRemoveImage}
-                    />
-                )}
-
                 {activeTab === 'dashboard' && (
                     <DashboardTab
                         stats={stats}
@@ -476,6 +506,18 @@ const Admin = () => {
                     />
                 )}
             </main>
+            {showProjectForm && (
+                <ProjectFormModal
+                    projectForm={projectForm}
+                    editingProject={editingProject}
+                    loading={loading}
+                    error={error}
+                    onClose={resetProjectForm}
+                    onSubmit={handleProjectSubmit}
+                    onChange={handleProjectFormChange}
+                    onRemoveImage={handleRemoveImage}
+                />
+            )}
         </div>
     );
 };

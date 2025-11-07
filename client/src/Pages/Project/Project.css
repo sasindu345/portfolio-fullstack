@@ -779,11 +779,19 @@ body {
 
 @media (max-width: 768px) {
     .project-container {
-        padding: 2rem 1.5rem;
+        padding: 0rem 1.5rem;
+    }
+
+    .project-header {
+        margin-top: 1.5rem;
+        /* push header down on small screens */
     }
 
     .project-header h1 {
         font-size: 2.5rem;
+        margin-top: 0.5in;
+        /* moved down ~0.5 inch */
+        /* extra spacing if needed */
     }
 
     .project-header p {
@@ -829,21 +837,33 @@ body {
         padding: 1.5rem 1rem;
     }
 
-    .project-content {
-        padding: 1.5rem;
+    .project-header h1 {
+        font-size: 1.75rem;
     }
 
-    .project-header h1 {
-        font-size: 2rem;
+    .project-header p {
+        font-size: 0.95rem;
+    }
+
+    .project-content {
+        padding: 1.25rem;
+    }
+
+    .project-content h3 {
+        font-size: 1.2rem;
+    }
+
+    .project-description {
+        font-size: 0.9rem;
     }
 
     .modal-content {
-        border-radius: 20px;
+        border-radius: 16px;
         margin: 0.5rem;
     }
 
     .modal-header {
-        padding: 1.5rem;
+        padding: 1.5rem 1rem;
     }
 
     .modal-header h2 {
@@ -851,15 +871,20 @@ body {
     }
 
     .modal-body {
-        padding: 1.5rem;
+        padding: 1.5rem 1rem;
         gap: 1.5rem;
     }
 
     .project-image {
-        height: 200px;
+        height: 180px;
     }
 
     .main-image img {
         height: 200px;
+    }
+
+    .tech-tag {
+        font-size: 0.7rem;
+        padding: 0.3rem 0.7rem;
     }
 }
