@@ -86,9 +86,9 @@ export const createProject = async (req, res) => {
             const technologies = JSON.parse(req.body.technologies || '[]');
             const links = JSON.parse(req.body.links || '{}');
 
-            // Handle uploaded image
+            // Handle uploaded image (Cloudinary returns secure URL at req.file.path)
             const images = {
-                thumbnail: req.file ? req.file.filename : 'default-image.jpg',
+                thumbnail: req.file?.path || req.file?.filename || 'default-image.jpg',
                 gallery: []
             };
 
@@ -182,6 +182,15 @@ export const updateProject = async (req, res) => {
         }
 
         let updateData = { ...req.body };
+
+        // If a new file is uploaded (multipart), persist the Cloudinary URL as thumbnail
+        if (req.file?.path) {
+            updateData.images = {
+                thumbnail: req.file.path,
+                // Preserve existing gallery if present
+                gallery: project.images?.gallery || []
+            };
+        }
 
         // Handle technologies array
         if (typeof updateData.technologies === 'string') {

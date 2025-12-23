@@ -132,9 +132,8 @@ app.use('/api/auth', authRoutes);
 app.use('/api/projects', projectRoutes);
 app.use('/api/contact', contactRoutes);
 
-
-// Add this line with your other routes
-app.use('/api/upload', uploadRoutes);
+// Add this line with your other routes - FIXED: /api/uploads (plural)
+app.use('/api/uploads', uploadRoutes);
 // Add this BEFORE app.listen() in server.js:
 const createUploadDirs = () => {
     const uploadsDir = path.join(__dirname, 'uploads');
