@@ -41,7 +41,7 @@ const Project = () => {
     const closeModal = () => {
         setSelectedProject(null);
         setCurrentImageIndex(0);
-        document.body.style.overflow = 'unset';
+        document.body.style.overflow = '';
     };
 
     // Handle image gallery

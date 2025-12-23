@@ -52,13 +52,19 @@
 }
 
 /* Logo */
-.logo h2 {
+.logo-text {
     margin: 0;
     font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--header-accent);
+    font-weight: 800;
+    font-family: 'Inter', 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+    background: var(--gradient-accent);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
     text-decoration: none;
-    transition: color 0.3s ease;
+    transition: all 0.3s ease;
+    letter-spacing: -0.02em;
+    position: relative;
 }
 
 .logo a {
@@ -66,8 +72,9 @@
     color: inherit;
 }
 
-.logo a:hover h2 {
-    opacity: 0.8;
+.logo a:hover .logo-text {
+    transform: scale(1.05);
+    filter: brightness(1.1);
 }
 
 /* Desktop Navigation */
@@ -268,7 +275,7 @@
         padding: 1rem;
     }
 
-    .logo h2 {
+    .logo-text {
         font-size: 1.3rem;
     }
 

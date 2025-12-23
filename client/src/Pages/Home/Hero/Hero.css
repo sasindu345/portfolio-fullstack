@@ -136,6 +136,7 @@
 .hero-name {
   font-size: 2.25rem;
   font-weight: 800;
+  font-family: 'Inter', 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
   color: var(--text-primary);
   margin-bottom: 0.75rem;
   line-height: 1.1;
@@ -146,11 +147,61 @@
   opacity: 0;
   transform: translateY(20px);
   transition: all 0.8s ease 0.4s;
+  position: relative;
+  display: inline-block;
+  animation: nameGlow 3s ease-in-out infinite;
 }
 
 .hero-name.animate-in {
   opacity: 1;
   transform: translateY(0);
+  animation: nameGlow 3s ease-in-out infinite, nameSlideIn 0.8s ease 0.4s forwards;
+}
+
+@keyframes nameSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes nameGlow {
+
+  0%,
+  100% {
+    filter: brightness(1);
+    text-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+  }
+
+  50% {
+    filter: brightness(1.2);
+    text-shadow: 0 0 30px rgba(59, 130, 246, 0.5), 0 0 40px rgba(6, 182, 212, 0.3);
+  }
+}
+
+.typing-cursor {
+  display: inline-block;
+  margin-left: 2px;
+  animation: blink 1s infinite;
+  color: var(--accent-light-blue);
+}
+
+@keyframes blink {
+
+  0%,
+  50% {
+    opacity: 1;
+  }
+
+  51%,
+  100% {
+    opacity: 0;
+  }
 }
 
 .hero-title {

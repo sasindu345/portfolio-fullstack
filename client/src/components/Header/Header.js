@@ -24,7 +24,7 @@ const Header = () => {
                 {/* Logo */}
                 <div className="logo">
                     <Link to="/" onClick={closeMenu}>
-                        <h2>Portfolio</h2>
+                        <h2 className="logo-text">Sasindu Jayamadu</h2>
                     </Link>
                 </div>
 

@@ -14,7 +14,7 @@
 
 /* About Section - Mobile First */
 .about {
-    padding: 80px 0;
+    padding: 80px 0 40px 0;
     background: var(--gradient-primary);
     min-height: 100vh;
     color: var(--text-primary);
@@ -30,13 +30,15 @@
     z-index: 1;
 }
 
-/* Header */
+/* Professional Header - Centered and clean */
 .about-header {
     text-align: center;
-    margin-bottom: 3rem;
+    margin-bottom: 2rem;
+    margin-top: 1rem;
     opacity: 0;
-    transform: translateY(30px);
-    transition: all 0.8s ease;
+    transform: translateY(24px);
+    transition: all 0.7s ease;
+    padding: 0 0.5rem;
 }
 
 .about-header.animate-in {
@@ -44,86 +46,115 @@
     transform: translateY(0);
 }
 
+.header-content {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
 .about-title {
     font-size: 2rem;
     font-weight: 800;
-    margin-bottom: 0.5rem;
-    position: relative;
-    display: inline-block;
-    background: var(--gradient-accent);
+    margin: 0 0 0.5rem;
+    background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-cyan) 50%, var(--accent-light-blue) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-}
-
-.about-title::after {
-    content: '';
-    position: absolute;
-    bottom: -10px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 60px;
-    height: 3px;
-    background: var(--gradient-accent);
-    border-radius: 2px;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
 }
 
 .about-subtitle {
-    font-size: 1rem;
+    font-size: 0.95rem;
     color: var(--text-secondary);
-    margin-top: 1.5rem;
+    line-height: 1.6;
+    margin: 0 auto;
+    max-width: 780px;
+    padding: 0 1rem;
 }
 
-/* Content Layout - Mobile First */
+/* Content Layout - Mobile First, Desktop Side-by-Side */
 .about-content {
     display: flex;
     flex-direction: column;
-    gap: 2.5rem;
-    margin-bottom: 3rem;
+    gap: 2rem;
+    margin-bottom: 2.5rem;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transform: translateY(16px);
+    transition: all 0.6s ease 0.2s;
 }
 
-/* Left Side - Text Content */
-.about-text {
+.about-content.animate-in {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Image Wrapper - Shows FIRST on mobile (after header), right side on desktop */
+.about-image-wrapper {
+    width: 100%;
+    max-width: 320px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
     opacity: 0;
-    transform: translateX(-30px);
-    transition: all 0.8s ease 0.2s;
+    transform: translateY(16px);
+    transition: all 0.6s ease 0.1s;
+    order: -1;
+    /* Image shows FIRST on mobile */
+}
+
+.about-image-wrapper.animate-in {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Text Content - Shows AFTER image on mobile, left side on desktop */
+.about-text {
+    width: 100%;
+    max-width: 100%;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: all 0.6s ease 0.15s;
+    order: 1;
+    /* Text shows AFTER image on mobile */
 }
 
 .about-text.animate-in {
     opacity: 1;
-    transform: translateX(0);
+    transform: translateY(0);
 }
 
 .about-intro h3 {
-    font-size: 1.4rem;
+    font-size: 1.35rem;
     color: var(--accent-light-blue);
     margin-bottom: 1rem;
     font-weight: 700;
 }
 
 .about-intro p {
-    font-size: 1rem;
+    font-size: 0.95rem;
     line-height: 1.7;
     color: var(--text-secondary);
-    margin-bottom: 1.25rem;
+    margin-bottom: 1rem;
 }
 
 /* Personal Details Card */
 .about-details {
     background: var(--glass-bg);
-    backdrop-filter: blur(15px);
+    backdrop-filter: blur(12px);
     border: 1px solid var(--glass-border);
-    padding: 1.5rem;
-    border-radius: 16px;
-    box-shadow: var(--shadow-md);
-    margin: 2rem 0;
+    padding: 1rem;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+    margin: 1rem 0;
 }
 
 .detail-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.75rem 0;
+    padding: 0.65rem 0;
     border-bottom: 1px solid rgba(148, 163, 184, 0.1);
     gap: 1rem;
 }
@@ -135,20 +166,20 @@
 .detail-label {
     font-weight: 600;
     color: var(--text-primary);
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     white-space: nowrap;
 }
 
 .detail-value {
     color: var(--text-secondary);
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     text-align: right;
     word-break: break-word;
 }
 
-/* Download Button - Fixed Mobile */
+/* Download Button - Centered on mobile, left on desktop */
 .about-actions {
-    margin-top: 2rem;
+    margin-top: 1.5rem;
     display: flex;
     justify-content: center;
 }
@@ -158,21 +189,20 @@
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    padding: 1rem 1.5rem;
-    background: var(--gradient-accent);
+    padding: 0.9rem 1.8rem;
+    background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
     color: white;
     text-decoration: none;
     border-radius: 10px;
     font-weight: 600;
     font-size: 0.9rem;
     transition: all 0.3s ease;
-    box-shadow: 0 5px 15px rgba(59, 130, 246, 0.3);
+    box-shadow: 0 6px 18px rgba(59, 130, 246, 0.25);
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    width: 100%;
-    max-width: 300px;
     position: relative;
     overflow: hidden;
+    min-width: 220px;
 }
 
 .btn-download::before {
@@ -208,31 +238,28 @@
     transform: translateY(-1px);
 }
 
-/* Right Side */
-.about-right {
-    opacity: 0;
-    transform: translateX(30px);
-    transition: all 0.8s ease 0.4s;
-}
-
-.about-right.animate-in {
-    opacity: 1;
-    transform: translateX(0);
-}
-
 /* About Image */
 .about-image {
     position: relative;
-    margin-bottom: 2rem;
+    width: 100%;
+    max-width: 320px;
     border-radius: 16px;
     overflow: hidden;
-    box-shadow: var(--shadow-lg);
-    border: 2px solid var(--glass-border);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--glass-border);
+    background: var(--glass-bg);
+    transition: transform 0.3s ease;
+}
+
+.about-image:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
 }
 
 .about-image img {
+    display: block;
     width: 100%;
-    height: 300px;
+    height: auto;
     object-fit: cover;
     transition: transform 0.4s ease;
 }
@@ -251,32 +278,41 @@
     pointer-events: none;
 }
 
-/* Skills Card */
-.about-skills {
-    background: var(--glass-bg);
-    backdrop-filter: blur(15px);
-    border: 1px solid var(--glass-border);
-    padding: 1.5rem;
-    border-radius: 16px;
-    box-shadow: var(--shadow-md);
+/* Skills Section - NEW: Separate full-width section */
+.about-skills-section {
+    margin: 2.5rem 0;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s ease 0.4s;
 }
 
-.about-skills h4 {
-    font-size: 1.3rem;
-    color: var(--accent-light-blue);
+.about-skills-section.animate-in {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.section-title {
+    font-size: 1.5rem;
+    font-weight: 800;
     margin-bottom: 1.5rem;
-    font-weight: 700;
+    text-align: center;
+    background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
 .skills-grid {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: 1fr;
     gap: 1.25rem;
+    max-width: 100%;
 }
 
 .skill-item {
     display: flex;
     flex-direction: column;
+    width: 100%;
 }
 
 .skill-header {
@@ -289,29 +325,29 @@
 .skill-name {
     font-weight: 600;
     color: var(--text-primary);
-    font-size: 0.9rem;
+    font-size: 0.95rem;
 }
 
 .skill-percent {
-    font-weight: 600;
+    font-weight: 700;
     color: var(--accent-light-blue);
-    font-size: 0.85rem;
+    font-size: 0.9rem;
 }
 
 .skill-bar {
     width: 100%;
-    height: 8px;
-    background: rgba(148, 163, 184, 0.15);
-    border-radius: 10px;
+    height: 12px;
+    background: rgba(148, 163, 184, 0.12);
+    border-radius: 12px;
     overflow: hidden;
 }
 
 .skill-progress {
     height: 100%;
     width: 0;
-    background: var(--gradient-accent);
-    border-radius: 10px;
-    animation: fillSkill 1.5s ease-out forwards;
+    background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
+    border-radius: 12px;
+    animation: fillSkill 1.2s ease-out forwards;
     position: relative;
 }
 
@@ -322,7 +358,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.24), transparent);
     animation: shimmer 2s infinite;
 }
 
@@ -346,11 +382,11 @@
 .about-stats {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
+    gap: 0.75rem;
     background: var(--glass-bg);
     backdrop-filter: blur(15px);
     border: 1px solid var(--glass-border);
-    padding: 2rem 1rem;
+    padding: 1.5rem 1rem;
     border-radius: 16px;
     box-shadow: var(--shadow-md);
     opacity: 0;
@@ -365,14 +401,14 @@
 
 .stat-item {
     text-align: center;
-    padding: 1rem;
+    padding: 0.75rem;
 }
 
 .stat-item h3 {
-    font-size: 2.2rem;
+    font-size: 1.8rem;
     font-weight: 800;
     margin-bottom: 0.25rem;
-    background: var(--gradient-accent);
+    background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -380,7 +416,7 @@
 }
 
 .stat-item p {
-    font-size: 0.85rem;
+    font-size: 0.75rem;
     color: var(--text-secondary);
     font-weight: 500;
     text-transform: uppercase;
@@ -400,8 +436,185 @@
     }
 }
 
-/* Tablet */
-@media (min-width: 576px) {
+/* Education Section */
+.about-education {
+    margin-top: 2.5rem;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s ease 0.8s;
+}
+
+.about-education.animate-in {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.education-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+}
+
+.education-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(15px);
+    border: 1px solid var(--glass-border);
+    padding: 1.25rem;
+    border-radius: 16px;
+    box-shadow: var(--shadow-md);
+    transition: all 0.3s ease;
+}
+
+.education-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--accent-light-blue);
+}
+
+.education-header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.education-level {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--accent-light-blue);
+    margin: 0;
+}
+
+.education-stream {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
+.education-grades {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+}
+
+.grades-label {
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: 0.9rem;
+}
+
+.grades-value {
+    font-weight: 700;
+    color: var(--accent-cyan);
+    font-size: 1.1rem;
+    letter-spacing: 0.5px;
+}
+
+.education-description {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin: 0;
+    line-height: 1.6;
+}
+
+/* Achievements Section */
+.about-achievements {
+    margin-top: 2.5rem;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s ease 1s;
+}
+
+.about-achievements.animate-in {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.achievements-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.achievement-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(15px);
+    border: 1px solid var(--glass-border);
+    padding: 1.25rem;
+    border-radius: 16px;
+    box-shadow: var(--shadow-md);
+    display: flex;
+    gap: 1.25rem;
+    align-items: flex-start;
+    transition: all 0.3s ease;
+}
+
+.achievement-card:hover {
+    transform: translateX(3px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--accent-light-blue);
+}
+
+.achievement-icon {
+    font-size: 2rem;
+    line-height: 1;
+    flex-shrink: 0;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--glass-bg);
+    border-radius: 12px;
+    border: 1px solid var(--glass-border);
+}
+
+.achievement-image-wrapper {
+    flex-shrink: 0;
+    width: 100px;
+    height: 100px;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 2px solid var(--glass-border);
+    box-shadow: var(--shadow-md);
+    background: var(--glass-bg);
+}
+
+.achievement-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.3s ease;
+}
+
+.achievement-card:hover .achievement-image {
+    transform: scale(1.1);
+}
+
+.achievement-content {
+    flex: 1;
+}
+
+.achievement-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 0.5rem 0;
+}
+
+.achievement-description {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* ============================================ */
+/* DESKTOP IMPROVEMENTS - 768px and above */
+/* ============================================ */
+@media (min-width: 768px) {
     .about {
         padding: 100px 0;
     }
@@ -410,12 +623,36 @@
         padding: 0 2rem;
     }
 
+    .about-header {
+        margin-bottom: 4rem;
+        padding: 0;
+    }
+
     .about-title {
-        font-size: 2.3rem;
+        font-size: 3.5rem;
+        line-height: 1.05;
     }
 
     .about-subtitle {
-        font-size: 1.05rem;
+        font-size: 1.2rem;
+        padding: 0;
+    }
+
+    /* MAIN CHANGE: Side-by-side layout with better proportions */
+    .about-content {
+        flex-direction: row;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 4rem;
+        margin-bottom: 4rem;
+    }
+
+    /* Text takes up more space, centered content */
+    .about-text {
+        flex: 1 1 55%;
+        max-width: 600px;
+        order: 0;
+        /* Reset order for desktop */
     }
 
     .about-intro h3 {
@@ -423,39 +660,75 @@
     }
 
     .about-intro p {
-        font-size: 1.05rem;
+        font-size: 1.02rem;
+        line-height: 1.75;
+        margin-bottom: 1.2rem;
     }
 
     .about-details {
-        padding: 2rem;
+        padding: 1.2rem;
+        margin: 1.25rem 0;
     }
 
     .detail-label,
     .detail-value {
-        font-size: 0.95rem;
+        font-size: 0.9rem;
     }
 
-    .btn-download {
-        width: 100%;
-        max-width: 320px;
-        padding: 1rem 2rem;
-        font-size: 0.95rem;
+    .detail-item {
+        padding: 0.75rem 0;
     }
 
-    .about-image img {
-        height: 350px;
+    /* Image is larger and more prominent */
+    .about-image-wrapper {
+        flex: 0 0 420px;
+        max-width: 420px;
+        order: 0;
+        /* Reset order for desktop - image on right */
     }
 
-    .about-skills {
-        padding: 2rem;
+    .about-image {
+        max-width: 420px;
+        border-radius: 18px;
+        box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
     }
 
-    .about-skills h4 {
-        font-size: 1.4rem;
+    .about-image:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
     }
 
-    .skill-name {
-        font-size: 0.95rem;
+    /* Button aligns left on desktop */
+    .about-actions {
+        justify-content: flex-start;
+    }
+
+    /* Section titles larger on desktop */
+    .section-title {
+        font-size: 1.8rem;
+        margin-bottom: 2rem;
+    }
+
+    /* Skills section spacing */
+    .about-skills-section {
+        margin: 3rem 0;
+    }
+
+    /* SKILLS: Grid layout for desktop - 2 columns */
+    .skills-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2rem;
+    }
+
+    /* Stats: 4 columns on desktop */
+    .about-stats {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 2rem;
+        padding: 2.5rem;
+    }
+
+    .stat-item {
+        padding: 1rem;
     }
 
     .stat-item h3 {
@@ -465,94 +738,109 @@
     .stat-item p {
         font-size: 0.9rem;
     }
-}
 
-/* Desktop */
-@media (min-width: 768px) {
-    .about-content {
-        flex-direction: row;
-        gap: 3rem;
-    }
-
-    .about-text {
-        flex: 1;
-    }
-
-    .about-right {
-        flex: 1;
-    }
-
-    .about-actions {
-        justify-content: flex-start;
-    }
-
-    .btn-download {
-        width: auto;
-        max-width: none;
-    }
-
-    .about-image img {
-        height: 400px;
-    }
-
-    .about-stats {
-        grid-template-columns: repeat(4, 1fr);
+    /* Education: 2 columns on desktop */
+    .education-grid {
+        grid-template-columns: repeat(2, 1fr);
         gap: 2rem;
-        padding: 3rem 2rem;
     }
 
-    .stat-item {
-        border-right: 1px solid var(--glass-border);
+    .education-card {
+        padding: 1.5rem;
     }
 
-    .stat-item:last-child {
-        border-right: none;
+    .about-education,
+    .about-achievements {
+        margin-top: 3rem;
     }
 
-    .stat-item h3 {
-        font-size: 2.8rem;
+    .achievements-list {
+        gap: 1.5rem;
     }
 
-    .stat-item p {
-        font-size: 0.95rem;
+    .achievement-card {
+        padding: 1.5rem;
+        gap: 1.5rem;
+    }
+
+    .achievement-card:hover {
+        transform: translateX(5px);
+    }
+
+    .achievement-icon {
+        font-size: 2.5rem;
+        width: 60px;
+        height: 60px;
+    }
+
+    .achievement-image-wrapper {
+        width: 120px;
+        height: 120px;
     }
 }
 
-/* Large Desktop */
+/* Large Desktop - Further refinements */
 @media (min-width: 1024px) {
     .about-title {
-        font-size: 2.5rem;
+        font-size: 4rem;
     }
 
-    .about-subtitle {
-        font-size: 1.1rem;
-    }
-
+    /* Larger container for content */
     .about-content {
-        gap: 4rem;
+        gap: 5rem;
     }
 
-    .about-intro h3 {
-        font-size: 1.6rem;
-    }
-
-    .about-intro p {
-        font-size: 1.1rem;
-    }
-
-    .btn-download {
-        padding: 1.1rem 3rem;
+    /* Skills in 3 columns for large screens */
+    .skills-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 2.5rem;
     }
 }
 
-/* Extra Small Mobile */
-@media (max-width: 380px) {
-    .about {
-        padding: 60px 0;
+/* Mobile Responsive - Image shows FIRST after header, then text content */
+@media (max-width: 767px) {
+
+    /* Reduce padding for very small screens */
+    .about-content {
+        padding: 0 0.5rem;
     }
 
     .about-title {
         font-size: 1.75rem;
+    }
+
+    .about-subtitle {
+        font-size: 0.9rem;
+    }
+
+    /* Image appears first (order: -1 already set in base styles) */
+    .about-image-wrapper {
+        margin-bottom: 1.5rem;
+        max-width: 280px;
+    }
+
+    .about-image {
+        max-width: 280px;
+    }
+}
+
+/* Extra small mobile phones */
+@media (max-width: 480px) {
+    .about {
+        padding: 70px 0 30px 0;
+    }
+
+    .about-header {
+        margin-bottom: 1.5rem;
+        margin-top: 0.5rem;
+    }
+
+    .about-title {
+        font-size: 1.6rem;
+    }
+
+    .about-subtitle {
+        font-size: 0.88rem;
     }
 
     .about-intro h3 {
@@ -560,30 +848,37 @@
     }
 
     .about-intro p {
-        font-size: 0.95rem;
+        font-size: 0.9rem;
     }
 
-    .detail-item {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.25rem;
-    }
-
+    .detail-label,
     .detail-value {
-        text-align: left;
+        font-size: 0.8rem;
     }
 
     .btn-download {
-        padding: 0.85rem 1.25rem;
+        min-width: 200px;
+        padding: 0.8rem 1.5rem;
         font-size: 0.85rem;
-        max-width: 260px;
+    }
+
+    .section-title {
+        font-size: 1.4rem;
     }
 
     .stat-item h3 {
-        font-size: 2rem;
+        font-size: 1.6rem;
     }
 
     .stat-item p {
-        font-size: 0.8rem;
+        font-size: 0.7rem;
+    }
+
+    .achievement-title {
+        font-size: 1.1rem;
+    }
+
+    .achievement-description {
+        font-size: 0.88rem;
     }
 }

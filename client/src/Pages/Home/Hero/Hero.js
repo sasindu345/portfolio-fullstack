@@ -4,18 +4,34 @@ import { Link } from "react-router-dom";
 
 const Hero = () => {
   const [isVisible, setIsVisible] = useState(false);
+  const [displayName, setDisplayName] = useState('');
 
   useEffect(() => {
     setIsVisible(true);
+
+    // Typewriter effect for name
+    const name = "Sasindu Jayamadu";
+    let currentIndex = 0;
+
+    const typeInterval = setInterval(() => {
+      if (currentIndex <= name.length) {
+        setDisplayName(name.slice(0, currentIndex));
+        currentIndex++;
+      } else {
+        clearInterval(typeInterval);
+      }
+    }, 100); // Adjust speed here (lower = faster)
+
+    return () => clearInterval(typeInterval);
   }, []);
 
   const personalDetails = {
-    name: "Sasindu Wijewardana",
+    name: "Sasindu Jayamadu",
     title: "Full Stack Developer",
     greeting: "HELLO, I'M",
     description: "I craft exceptional digital experiences through innovative web solutions, combining cutting-edge technology with creative design to bring your ideas to life.",
     profileImage: "Images/home/myimg.jpeg",
-    imageAlt: "Sasindu Wijewardana Profile",
+    imageAlt: "Sasindu Jayamadu Profile",
     cvFile: "https://drive.google.com/uc?export=download&id=YOUR_FILE_ID",
     portfolioSection: "/projects",
   };
@@ -55,7 +71,10 @@ const Hero = () => {
               {personalDetails.greeting}
             </span>
             <h1 className={`hero-name ${isVisible ? 'animate-in' : ''}`}>
-              {personalDetails.name}
+              {displayName || personalDetails.name}
+              {displayName && displayName.length < personalDetails.name.length && (
+                <span className="typing-cursor">|</span>
+              )}
             </h1>
             <h2 className={`hero-title ${isVisible ? 'animate-in' : ''}`}>
               {personalDetails.title}

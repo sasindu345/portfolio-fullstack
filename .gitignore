@@ -1,0 +1,52 @@
+# Dependencies
+node_modules/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# OS / Editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Env files (DO NOT COMMIT)
+.env
+.env.*
+!*.example
+
+# Build outputs
+client/build/
+dist/
+build/
+
+# Coverage
+coverage/
+
+# Runtime
+*.pid
+*.seed
+*.pid.lock
+
+# Cache
+.cache/
+.eslintcache
+
+# Server uploads/temp
+server/uploads/
+server/uploads-temp/
+server/uploads_tmp/
+server/uploads/projects/temp/
+server/uploads/temp/
+
+# Optional: local DB files (if ever used)
+*.sqlite
+*.sqlite3
+
+# Optional: dotenvx
+.env.local

@@ -13,6 +13,7 @@ import Admin from './Pages/Admin/Admin';
 
 import { ThemeProvider } from './context/ThemeContext';
 import ThemeToggle from './components/ThemeToggle/ThemeToggle';
+import ScrollToTop from './components/ScrollToTop';
 import BubbleBackground from './components/BubbleBackground/BubbleBackground';
 import './styles/theme.css';
 
@@ -21,6 +22,7 @@ function App() {
     <Router>
       <ThemeProvider>
         <AuthProvider>
+
           <Routes>
             {/* Admin routes - NO Header/Footer */}
             <Route path="/admin/login" element={<Login />} />
@@ -31,6 +33,7 @@ function App() {
               <>
                 <BubbleBackground />
                 <Header />
+                <ScrollToTop />
                 <Routes>
                   <Route path="/" element={<Home />} />
                   <Route path="/about" element={<About />} />
