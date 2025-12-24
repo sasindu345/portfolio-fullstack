@@ -7,7 +7,11 @@ const connectDB = async () => {
         console.log("✅ MongoDB connected");
     } catch (err) {
         console.error("❌ DB connection error:", err.message);
-        process.exit(1);
+        if (process.env.ALLOW_SERVER_WITHOUT_DB === 'true') {
+            console.warn("⚠️ Continuing without DB connection due to ALLOW_SERVER_WITHOUT_DB=true");
+        } else {
+            process.exit(1);
+        }
     }
 };
 

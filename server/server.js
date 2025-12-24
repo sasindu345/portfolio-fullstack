@@ -14,6 +14,8 @@ import projectRoutes from './routes/projects.js';
 import contactRoutes from './routes/contacts.js';
 import uploadRoutes from './routes/upload.js';
 import fs from 'fs';
+import upload from './middleware/upload.js';
+import { uploadSingleImage } from './controllers/uploadController.js';
 
 // NEW LINES ADDED HERE
 const __filename = fileURLToPath(import.meta.url);
@@ -53,12 +55,14 @@ app.use(express.json());
 // Parse URL-encoded data (from forms)
 app.use(express.urlencoded({ extended: true }));
 
-// NEW LINE ADDED HERE - This serves your uploaded images
-app.use('/api/uploads', express.static(path.join(__dirname, 'uploads')));
+// Serve uploaded images (place after routes to avoid swallowing dynamic endpoints)
+// We'll re-mount this after the upload routes are registered below
 
 // ===============================
 // BASIC ROUTES (These are your API endpoints)
 // ===============================
+
+// (Removed: debug route lister)
 
 // Test route - This proves your server is working
 app.get('/', (req, res) => {
@@ -134,6 +138,10 @@ app.use('/api/contact', contactRoutes);
 
 // Add this line with your other routes - FIXED: /api/uploads (plural)
 app.use('/api/uploads', uploadRoutes);
+// Now serve static files from uploads under the same prefix without shadowing dynamic routes
+app.use('/api/uploads', express.static(path.join(__dirname, 'uploads')));
+
+// (Removed: temporary unauthenticated upload endpoint)
 // Add this BEFORE app.listen() in server.js:
 const createUploadDirs = () => {
     const uploadsDir = path.join(__dirname, 'uploads');

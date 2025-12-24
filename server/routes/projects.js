@@ -8,6 +8,7 @@ import {
     getAdminProjects
 } from '../controllers/projectController.js';
 import { authenticate, requireAdmin } from '../middleware/auth.js';
+import upload from '../middleware/upload.js';
 
 const router = express.Router();
 
@@ -19,8 +20,8 @@ router.get('/', getAllProjects);           // GET /api/projects
 router.get('/:id', getProject);            // GET /api/projects/:id (MUST be after /admin/all)
 
 // Admin routes (protected)
-router.post('/', authenticate, requireAdmin, createProject);           // POST /api/projects
-router.put('/:id', authenticate, requireAdmin, updateProject);         // PUT /api/projects/:id
-router.delete('/:id', authenticate, requireAdmin, deleteProject);      // DELETE /api/projects/:id
+router.post('/', authenticate, requireAdmin, upload.single('image'), createProject);
+router.put('/:id', authenticate, requireAdmin, upload.single('image'), updateProject);
+router.delete('/:id', authenticate, requireAdmin, deleteProject);    // DELETE /api/projects/:id
 
 export default router;
