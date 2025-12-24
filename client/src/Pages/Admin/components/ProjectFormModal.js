@@ -1,6 +1,7 @@
 // src/Pages/Admin/components/ProjectFormModal.js
 import React from 'react';
 import { createPortal } from 'react-dom';
+import { resolveImageUrl } from '../../../utils/imageUrlResolver';
 
 const ProjectFormModal = ({
     projectForm,
@@ -14,11 +15,7 @@ const ProjectFormModal = ({
 }) => {
     const getImagePreview = (img) => {
         if (typeof img === 'string') {
-            if (img.startsWith('http')) return img;
-            if (img.startsWith('/api/uploads/')) {
-                return `http://localhost:5001${img}`;
-            }
-            return img;
+            return resolveImageUrl(img, '/Images/home/myimg.jpeg');
         }
         return img.preview;
     };
@@ -206,7 +203,7 @@ const ProjectFormModal = ({
                                                     objectFit: 'cover'
                                                 }}
                                                 onError={(e) => {
-                                                    e.target.src = '/images/home/myimg.jpeg';
+                                                    e.target.src = '/Images/home/myimg.jpeg';
                                                 }}
                                             />
                                             <button

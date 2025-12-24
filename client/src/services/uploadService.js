@@ -1,4 +1,6 @@
 import api from './api';
+import API_BASE_URL from '../config/apiConfig';
+import { resolveImageUrl } from '../utils/imageUrlResolver';
 
 export const uploadService = {
     // Upload single image
@@ -7,10 +9,10 @@ export const uploadService = {
             const formData = new FormData();
             formData.append('image', imageFile);
 
-            const response = await api.post('/uploads/image', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
+            const response = await api.post('/uploads/single', formData, {
+                timeout: 60000,
+                maxContentLength: Infinity,
+                maxBodyLength: Infinity,
                 onUploadProgress: (progressEvent) => {
                     if (onProgress) {
                         const percentCompleted = Math.round(
@@ -27,9 +29,9 @@ export const uploadService = {
         }
     },
 
-    // Get full image URL
+    // Get full image URL - uses centralized resolver
     getImageUrl: (imagePath) => {
         if (!imagePath) return null;
-        return `http://localhost:5001${imagePath}`;
+        return resolveImageUrl(imagePath, null);
     }
 };

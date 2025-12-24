@@ -2,11 +2,11 @@
 import axios from 'axios';
 
 // Base API URL from environment variable
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5001';
+const API_BASE_URL = process.env.REACT_APP_API_URL;
 
 const api = axios.create({
     baseURL: `${API_BASE_URL}/api`,
-    timeout: 10000,
+    timeout: 30000, // increase from 10s to 30s to avoid ECONNABORTED on cold starts
     headers: {
         'Content-Type': 'application/json',
     },

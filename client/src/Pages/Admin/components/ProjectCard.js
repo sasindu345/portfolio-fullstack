@@ -1,5 +1,6 @@
 // src/Pages/Admin/components/ProjectCard.js
 import React, { useState, useEffect } from 'react';
+import { resolveImageUrl } from '../../../utils/imageUrlResolver';
 
 const ProjectCard = ({ project, onEdit, onDelete }) => {
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -35,17 +36,12 @@ const ProjectCard = ({ project, onEdit, onDelete }) => {
         );
     };
 
-    // Get image URL
+    // Get image URL - uses centralized resolver
     const getImageUrl = (imagePath) => {
-        if (!imagePath) return '/images/home/myimg.jpeg';
-        if (imagePath.startsWith('http')) return imagePath;
-        if (imagePath.startsWith('/api/uploads/')) {
-            return `http://localhost:5001${imagePath}`;
-        }
-        return imagePath;
+        return resolveImageUrl(imagePath, '/Images/home/myimg.jpeg');
     };
 
-    const currentImage = allImages[currentImageIndex] || '/images/home/myimg.jpeg';
+    const currentImage = allImages[currentImageIndex] || '/Images/home/myimg.jpeg';
 
     return (
         <div className="project-card">

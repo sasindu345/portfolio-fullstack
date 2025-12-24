@@ -4,7 +4,6 @@ import { aboutData } from '../../config/aboutConfig';
 
 const About = () => {
     const [isVisible, setIsVisible] = useState(false);
-
     useEffect(() => {
         const observer = new IntersectionObserver(
             (entries) => {

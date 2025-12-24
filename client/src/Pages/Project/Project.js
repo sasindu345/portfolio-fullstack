@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './Project.css';
 import projectService from '../../services/projectService';
+import { resolveImageUrl } from '../../utils/imageUrlResolver';
 
 const Project = () => {
     const [projects, setProjects] = useState([]);
@@ -9,6 +10,7 @@ const Project = () => {
     const [selectedProject, setSelectedProject] = useState(null);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
+
     useEffect(() => {
         const fetchProjects = async () => {
             try {
@@ -16,7 +18,15 @@ const Project = () => {
                 const result = await projectService.getAllProjects();
 
                 if (result.success) {
-                    setProjects(result.data.projects || result.data || []);
+                    const projectData = result.data.projects || result.data || [];
+                    setProjects(projectData)
+                    console.log('PROJECT DATA SAMPLE:', result.data.projects?.[0] || result.data?.[0]);
+
+                    // DEBUG: Log first project's image structure to verify data shape
+                    if (projectData.length > 0) {
+                        console.log('First project image data:', projectData[0].images);
+                        console.log('First project image field:', projectData[0].image);
+                    }
                 } else {
                     setError(result.error || 'Failed to load projects');
                 }
@@ -46,34 +56,106 @@ const Project = () => {
 
     // Handle image gallery
     const nextImage = () => {
-        if (selectedProject?.images?.gallery?.length > 0) {
-            setCurrentImageIndex((prev) =>
-                (prev + 1) % (selectedProject.images.gallery.length + 1)
-            );
+        const totalImages = getTotalImageCount(selectedProject);
+        if (totalImages > 1) {
+            setCurrentImageIndex((prev) => (prev + 1) % totalImages);
         }
     };
 
     const prevImage = () => {
-        if (selectedProject?.images?.gallery?.length > 0) {
-            setCurrentImageIndex((prev) =>
-                prev === 0 ? selectedProject.images.gallery.length : prev - 1
-            );
+        const totalImages = getTotalImageCount(selectedProject);
+        if (totalImages > 1) {
+            setCurrentImageIndex((prev) => (prev === 0 ? totalImages - 1 : prev - 1));
         }
     };
 
-    // Get image URL helper
+    // Get image URL helper - uses centralized resolver
     const getImageUrl = (imagePath) => {
-        if (!imagePath) return '/images/placeholder-project.png';
-        if (imagePath.startsWith('http')) return imagePath;
+        return resolveImageUrl(imagePath, '/images/placeholder-project.png');
+    };
 
-        // If path already has the full server path format
-        if (imagePath.startsWith('/api/uploads/')) {
-            return `http://localhost:5001${imagePath}`;
+    // Extract actual URL string from various image data formats
+    // Handles: strings, objects ({ url, path }), arrays, null/undefined
+    const extractImageUrl = (imageData) => {
+        if (!imageData) return null;
+
+        // Already a string - return as-is
+        if (typeof imageData === 'string') return imageData;
+
+        // Object with url property (e.g., { url: "...", path: "..." })
+        if (typeof imageData === 'object' && imageData.url) return imageData.url;
+
+        // Object with path property
+        if (typeof imageData === 'object' && imageData.path) return imageData.path;
+
+        // Array - extract first element
+        if (Array.isArray(imageData) && imageData[0]) {
+            return extractImageUrl(imageData[0]); // Recursive for nested formats
         }
 
-        // Handle direct filenames
-        return `http://localhost:5001/api/uploads/projects/${imagePath}`;
+        // Fallback to null (triggers placeholder)
+        return null;
     };
+
+    // Get first available image from project with fallback chain
+    // Tolerates multiple data shapes: images.thumbnail, images.gallery[0], image, images[0]
+    const getProjectThumbnail = (project) => {
+        // Try: images.thumbnail
+        if (project.images?.thumbnail) {
+            const thumb = extractImageUrl(project.images.thumbnail);
+
+            // If backend default placeholder, ignore it
+            if (thumb === '/default-project.jpg') {
+                return null; // triggers frontend placeholder
+            }
+
+            return thumb;
+        }
+
+        // Try: images.gallery first element
+        if (project.images?.gallery?.[0]) return extractImageUrl(project.images.gallery[0]);
+
+        // Try: legacy "image" field
+        if (project.image) return extractImageUrl(project.image);
+
+        // Try: legacy "images" array first element
+        if (Array.isArray(project.images) && project.images[0]) return extractImageUrl(project.images[0]);
+
+        // Return null (will use placeholder via getImageUrl fallback)
+        return null;
+    };
+
+    // Get image from gallery or thumbnail based on index
+    // currentImageIndex 0 = thumbnail, 1+ = gallery images
+    const getModalImage = (project, imageIndex) => {
+        if (imageIndex === 0) {
+            return getProjectThumbnail(project);
+        }
+
+        // Gallery image (adjust index)
+        const galleryIndex = imageIndex - 1;
+
+        // Try: images.gallery array
+        if (project.images?.gallery?.[galleryIndex]) {
+            return extractImageUrl(project.images.gallery[galleryIndex]);
+        }
+
+        // Try: legacy "images" array
+        if (Array.isArray(project.images) && project.images[galleryIndex]) {
+            return extractImageUrl(project.images[galleryIndex]);
+        }
+
+        return null;
+    };
+
+    // Get total image count (thumbnail + gallery)
+    const getTotalImageCount = (project) => {
+        const galleryLength = Array.isArray(project.images?.gallery) ? project.images.gallery.length : 0;
+        const legacyLength = Array.isArray(project.images) && !project.images.gallery ? project.images.length - 1 : 0;
+        const hasThumbnail = getProjectThumbnail(project) ? 1 : 0;
+        return hasThumbnail + Math.max(galleryLength, legacyLength);
+    };
+
     // Format date helper
     const formatDate = (date) => {
         return new Date(date).toLocaleDateString('en-US', {
@@ -131,7 +213,7 @@ const Project = () => {
                         >
                             <div className="project-image">
                                 <img
-                                    src={getImageUrl(project.images?.thumbnail)}
+                                    src={getImageUrl(getProjectThumbnail(project))}
                                     alt={project.title}
                                     onError={(e) => {
                                         e.target.src = '/images/placeholder-project.png';
@@ -203,17 +285,13 @@ const Project = () => {
                             <div className="modal-image-section">
                                 <div className="main-image">
                                     <img
-                                        src={getImageUrl(
-                                            currentImageIndex === 0
-                                                ? selectedProject.images?.thumbnail
-                                                : selectedProject.images?.gallery[currentImageIndex - 1]
-                                        )}
+                                        src={getImageUrl(getModalImage(selectedProject, currentImageIndex))}
                                         alt={selectedProject.title}
                                     />
-                                    {selectedProject.images?.gallery?.length > 0 && (
+                                    {getTotalImageCount(selectedProject) > 1 && (
                                         <div className="image-controls">
                                             <button onClick={prevImage}>‹</button>
-                                            <span>{currentImageIndex + 1} / {(selectedProject.images?.gallery?.length || 0) + 1}</span>
+                                            <span>{currentImageIndex + 1} / {getTotalImageCount(selectedProject)}</span>
                                             <button onClick={nextImage}>›</button>
                                         </div>
                                     )}

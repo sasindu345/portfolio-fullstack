@@ -187,18 +187,56 @@ const Admin = () => {
             let uploadedPaths = [];
             const newImages = projectForm.images.filter(img => img.file);
 
+            console.log('📸 Images to upload:', newImages.length);
+            console.log('📸 New images:', newImages);
+            console.log('📸 All images in form:', projectForm.images);
+
             if (newImages.length > 0) {
                 for (const imgObj of newImages) {
+                    console.log('📤 Image object:', imgObj);
+                    console.log('📤 File object:', imgObj.file);
+                    console.log('📤 File instanceof File:', imgObj.file instanceof File);
+                    console.log('📤 File details:', {
+                        name: imgObj.file?.name,
+                        type: imgObj.file?.type,
+                        size: imgObj.file?.size,
+                        lastModified: imgObj.file?.lastModified
+                    });
+
                     const formData = new FormData();
                     formData.append('image', imgObj.file);
 
+                    console.log('📤 FormData entries:');
+                    for (let pair of formData.entries()) {
+                        console.log('  ', pair[0], ':', pair[1]);
+                    }
+
                     try {
-                        const uploadResponse = await api.post('/upload/single', formData, {
-                            headers: { 'Content-Type': 'multipart/form-data' }
+                        console.log('📤 About to POST to /uploads/single');
+                        const uploadResponse = await api.post('/uploads/single', formData, {
+                            timeout: 60000,
+                            maxContentLength: Infinity,
+                            maxBodyLength: Infinity,
+                            headers: {
+                                'Content-Type': undefined  // Let axios set the boundary automatically
+                            }
                         });
+                        console.log('✅ Upload success:', uploadResponse.data);
                         uploadedPaths.push(uploadResponse.data.data.path);
                     } catch (uploadError) {
-                        console.error('Upload error:', uploadError);
+                        console.error('❌ Upload error:', uploadError);
+                        console.error('❌ Error response:', uploadError.response?.data);
+                        console.error('❌ Error status:', uploadError.response?.status);
+                        console.error('❌ Full error details:', {
+                            message: uploadError.message,
+                            code: uploadError.code,
+                            response: uploadError.response,
+                            config: {
+                                url: uploadError.config?.url,
+                                method: uploadError.config?.method,
+                                headers: uploadError.config?.headers
+                            }
+                        });
                     }
                 }
             }
@@ -227,7 +265,7 @@ const Admin = () => {
                     documentation: projectForm.links.documentation.trim()
                 },
                 images: {
-                    thumbnail: allImages[0] || '/default-project.jpg',
+                    thumbnail: allImages[0] || '',
                     gallery: allImages.slice(1)
                 }
             };
