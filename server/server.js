@@ -41,9 +41,11 @@ const PORT = process.env.PORT || 5001;
 // CORS: Allows your React app (probably running on port 3000) to talk to this server
 app.use(cors({
     origin: [
-        'http://localhost:3000',           // For local development
-        'http://192.168.1.103:3000',       // For network access
-        'http://127.0.0.1:3000'            // Alternative localhost
+        'http://localhost:3000',                          // For local development
+        'http://192.168.1.103:3000',                      // For network access
+        'http://127.0.0.1:3000',                          // Alternative localhost
+        'https://portfolio-fullstack-r4mm.vercel.app',    // Vercel frontend
+        'https://portfolio-fullstack-7668.onrender.com'   // Render backend (self)
     ],
     credentials: true // If you need to send cookies/auth
 }));
