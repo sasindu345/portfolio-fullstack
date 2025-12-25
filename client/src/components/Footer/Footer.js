@@ -75,13 +75,13 @@ const Footer = () => {
                         <div className="footer__contact-info">
                             <div className="footer__contact-item">
                                 <span className="footer__contact-label">Email:</span>
-                                <a href="mailto:your.email@example.com" className="footer__contact-link">
-                                    your.email@example.com
+                                <a href="mailto:jayamadusasindu5@gmail.com" className="footer__contact-link">
+                                    jayamadusasindu5@gmail.com
                                 </a>
                             </div>
                             <div className="footer__contact-item">
                                 <span className="footer__contact-label">Location:</span>
-                                <span className="footer__contact-text">Your City, Country</span>
+                                <span className="footer__contact-text">Elpitiya, Galle, Sri Lanka</span>
                             </div>
                         </div>
                     </div>

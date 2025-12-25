@@ -988,6 +988,9 @@ body.modal-open {
 }
 
 .modal-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
     background: rgba(15, 23, 42, 0.8);
     border: 1px solid var(--glass-border);
     border-radius: 50%;
@@ -996,6 +999,7 @@ body.modal-open {
     font-size: 1.5rem;
     color: var(--text-secondary);
     cursor: pointer;
+    z-index: 150;
     transition: all 0.3s ease;
     backdrop-filter: blur(10px);
     display: flex;

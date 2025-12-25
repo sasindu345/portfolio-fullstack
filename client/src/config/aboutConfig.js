@@ -72,8 +72,8 @@ export const aboutData = {
         {
             title: "Top 5 Finalist – Two Machine Learning Competitions",
             description: "Recognized for innovative solutions and practical ML implementation.",
-            icon: "🏆",
-            // image: { src: "Images/achievements/ml-competition.jpg", alt: "ML Competition Certificate" } // Optional: uncomment and add image path
+            icon: "🏆"
+            // image: { src: "/Images/home/myimg.jpeg", alt: "ML Competition Certificate" } // Optional: uncomment and add image path
         }
     ]
 };

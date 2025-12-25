@@ -45,12 +45,14 @@ const Project = () => {
     const openModal = (project) => {
         setSelectedProject(project);
         setCurrentImageIndex(0);
+        document.body.classList.add('modal-open');
         document.body.style.overflow = 'hidden';
     };
 
     const closeModal = () => {
         setSelectedProject(null);
         setCurrentImageIndex(0);
+        document.body.classList.remove('modal-open');
         document.body.style.overflow = '';
     };
 
@@ -266,19 +268,24 @@ const Project = () => {
             {selectedProject && (
                 <div className="modal-overlay" onClick={closeModal}>
                     <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-                        <button className="modal-close" onClick={closeModal}>×</button>
-
                         <div className="modal-header">
-                            <h2>{selectedProject.title}</h2>
-                            <div className="modal-meta">
-                                <span className={`status status-${selectedProject.status}`}>
-                                    {selectedProject.status}
-                                </span>
-                                <span className="date-range">
-                                    {formatDate(selectedProject.startDate)}
-                                    {selectedProject.endDate && ` - ${formatDate(selectedProject.endDate)}`}
-                                </span>
+                            <div className="modal-header-content">
+                                <h2>{selectedProject.title}</h2>
+                                <div className="modal-meta">
+                                    <span className={`status status-${selectedProject.status}`}>
+                                        {selectedProject.status}
+                                    </span>
+                                    <span className="date-range">
+                                        {formatDate(selectedProject.startDate)}
+                                        {selectedProject.endDate && ` - ${formatDate(selectedProject.endDate)}`}
+                                    </span>
+                                </div>
                             </div>
+                            <button className="modal-close" onClick={closeModal} aria-label="Close modal">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
+                                </svg>
+                            </button>
                         </div>
 
                         <div className="modal-body">
